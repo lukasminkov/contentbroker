@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
-import { Instagram, Tiktok } from "lucide-react"
+import { Instagram, Video } from "lucide-react"
 
 const categories = [
   "All",
@@ -22,7 +22,7 @@ const getPlatformIcon = (platform: string) => {
   switch (platform.toLowerCase()) {
     case 'tiktok shop':
     case 'tiktok':
-      return <Tiktok className="h-5 w-5" />
+      return <Video className="h-5 w-5" />
     case 'instagram':
       return <Instagram className="h-5 w-5" />
     default:
