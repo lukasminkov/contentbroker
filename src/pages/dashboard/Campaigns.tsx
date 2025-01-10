@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
-import { format } from "date-fns"
+import { BrandTiktok } from "lucide-react"
 
 const categories = [
   "All",
@@ -18,7 +19,7 @@ const categories = [
 ]
 
 const CampaignCard = ({ campaign }: { campaign: any }) => {
-  console.log("Rendering campaign:", campaign) // Debug log
+  console.log("Rendering campaign:", campaign)
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="aspect-video w-full overflow-hidden">
@@ -29,38 +30,31 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
         />
       </div>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="space-y-2">
           <CardTitle className="text-lg">{campaign.brand_name}</CardTitle>
-          <span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">
-            {campaign.status}
-          </span>
+          <p className="text-sm text-muted-foreground">{campaign.product_name}</p>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
+        <div className="mb-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Retainer Range</span>
-            <span className="font-medium">
+            <span className="font-medium text-emerald-500">
               ${campaign.retainer_min} - ${campaign.retainer_max}
             </span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Platform</span>
-            <span className="font-medium">{campaign.platform}</span>
+            <BrandTiktok className="h-5 w-5" />
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Applications</span>
-            <span className="font-medium">
-              {campaign.application_end_date ? (
-                `Until ${format(new Date(campaign.application_end_date), "MMM d, yyyy")}`
-              ) : (
-                "Open"
-              )}
-            </span>
-          </div>
-          <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-            {campaign.about}
-          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button asChild variant="secondary" className="flex-1">
+            <a href={`/dashboard/campaigns/${campaign.id}`}>Learn More</a>
+          </Button>
+          <Button asChild className="flex-1">
+            <a href={`/dashboard/campaigns/${campaign.id}/apply`}>Apply</a>
+          </Button>
         </div>
       </CardContent>
     </Card>

@@ -1,35 +1,29 @@
-import { Toaster } from "@/components/ui/toaster"
-import { Toaster as Sonner } from "@/components/ui/sonner"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Index from "./pages/Index"
-import DashboardLayout from "./components/layout/DashboardLayout"
-import DashboardHome from "./pages/dashboard/Home"
-import Campaigns from "./pages/dashboard/Campaigns"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import DashboardLayout from "@/components/layout/DashboardLayout"
+import Campaigns from "@/pages/dashboard/Campaigns"
+import CampaignDetails from "@/pages/dashboard/CampaignDetails"
+import CampaignApplication from "@/pages/dashboard/CampaignApplication"
+import Home from "@/pages/dashboard/Home"
+import Chat from "@/pages/dashboard/Chat"
+import Commissions from "@/pages/dashboard/Commissions"
+import Resources from "@/pages/dashboard/Resources"
 
-const queryClient = new QueryClient()
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<DashboardHome />} />
-            <Route path="campaigns" element={<Campaigns />} />
-            <Route path="commissions" element={<div>Commissions page (coming soon)</div>} />
-            <Route path="chat" element={<div>Chat page (coming soon)</div>} />
-            <Route path="resources" element={<div>Resources page (coming soon)</div>} />
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-)
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Home />} />
+          <Route path="campaigns" element={<Campaigns />} />
+          <Route path="campaigns/:id" element={<CampaignDetails />} />
+          <Route path="campaigns/:id/apply" element={<CampaignApplication />} />
+          <Route path="chat" element={<Chat />} />
+          <Route path="commissions" element={<Commissions />} />
+          <Route path="resources" element={<Resources />} />
+        </Route>
+      </Routes>
+    </Router>
+  )
+}
 
 export default App
