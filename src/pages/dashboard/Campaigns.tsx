@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
-import { Instagram, Video, Sparkles, Clock } from "lucide-react"
+import { Instagram, Video, Sparkles, Clock, Gift } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 const categories = [
@@ -47,14 +47,22 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{campaign.brand_name}</CardTitle>
-          <Badge variant={campaign.campaign_type === 'retainer' ? 'default' : 'secondary'}>
-            {campaign.campaign_type === 'retainer' ? (
-              <Clock className="mr-1 h-3 w-3" />
-            ) : (
-              <Sparkles className="mr-1 h-3 w-3" />
+          <div className="flex flex-col gap-2">
+            <Badge variant={campaign.campaign_type === 'retainer' ? 'default' : 'secondary'}>
+              {campaign.campaign_type === 'retainer' ? (
+                <Clock className="mr-1 h-3 w-3" />
+              ) : (
+                <Sparkles className="mr-1 h-3 w-3" />
+              )}
+              {campaign.campaign_type === 'retainer' ? 'Retainer' : 'Incentive'}
+            </Badge>
+            {campaign.free_samples && (
+              <Badge variant="outline" className="bg-accent/10">
+                <Gift className="mr-1 h-3 w-3" />
+                Free Sample
+              </Badge>
             )}
-            {campaign.campaign_type === 'retainer' ? 'Retainer' : 'Incentive'}
-          </Badge>
+          </div>
         </div>
         <p className="text-sm text-muted-foreground">{campaign.product_name}</p>
       </CardHeader>
@@ -74,13 +82,13 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
           <div className="flex items-center justify-between min-h-[24px]">
             <span className="text-sm text-muted-foreground">
               {campaign.campaign_type === 'retainer' 
-                ? 'Monthly Retainer' 
-                : 'Campaign Budget'}
+                ? 'Retainer' 
+                : 'Prizes'}
             </span>
             <span className="font-medium text-emerald-500">
               {campaign.campaign_type === 'retainer' 
                 ? `$${campaign.retainer_min} - $${campaign.retainer_max}`
-                : `$${campaign.amount}`
+                : campaign.prizes ? 'Yes' : 'No'
               }
             </span>
           </div>

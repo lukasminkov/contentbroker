@@ -23,10 +23,12 @@ export type Database = {
           category: string | null
           commission_boost: number
           created_at: string
+          free_samples: boolean | null
           gmv_target: number[] | null
           id: string
           name: string
           platform: string
+          prizes: boolean | null
           product_image_url: string | null
           product_name: string
           profile_id: string | null
@@ -50,10 +52,12 @@ export type Database = {
           category?: string | null
           commission_boost?: number
           created_at?: string
+          free_samples?: boolean | null
           gmv_target?: number[] | null
           id?: string
           name: string
           platform?: string
+          prizes?: boolean | null
           product_image_url?: string | null
           product_name?: string
           profile_id?: string | null
@@ -77,10 +81,12 @@ export type Database = {
           category?: string | null
           commission_boost?: number
           created_at?: string
+          free_samples?: boolean | null
           gmv_target?: number[] | null
           id?: string
           name?: string
           platform?: string
+          prizes?: boolean | null
           product_image_url?: string | null
           product_name?: string
           profile_id?: string | null
