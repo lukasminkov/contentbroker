@@ -9,7 +9,86 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          about: string | null
+          created_at: string
+          date_of_birth: string
+          first_name: string
+          gmv: number | null
+          gmv_proof_url: string | null
+          id: string
+          instagram_url: string | null
+          last_name: string
+          profile_picture_url: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          about?: string | null
+          created_at?: string
+          date_of_birth: string
+          first_name: string
+          gmv?: number | null
+          gmv_proof_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          last_name: string
+          profile_picture_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          about?: string | null
+          created_at?: string
+          date_of_birth?: string
+          first_name?: string
+          gmv?: number | null
+          gmv_proof_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          last_name?: string
+          profile_picture_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      tiktok_accounts: {
+        Row: {
+          created_at: string
+          id: string
+          niche: string
+          profile_id: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          niche: string
+          profile_id?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          niche?: string
+          profile_id?: string | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tiktok_accounts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
