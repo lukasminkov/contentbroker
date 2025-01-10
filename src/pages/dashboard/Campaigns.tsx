@@ -44,27 +44,31 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
           className="h-full w-full object-cover"
         />
       </div>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{campaign.brand_name}</CardTitle>
-          <div className="flex flex-col gap-2">
-            <Badge variant={campaign.campaign_type === 'retainer' ? 'default' : 'secondary'}>
-              {campaign.campaign_type === 'retainer' ? (
-                <Clock className="mr-1 h-3 w-3" />
-              ) : (
-                <Sparkles className="mr-1 h-3 w-3" />
-              )}
-              {campaign.campaign_type === 'retainer' ? 'Retainer' : 'Incentive'}
-            </Badge>
-            {campaign.free_samples && (
-              <Badge variant="outline" className="bg-accent/10">
-                <Gift className="mr-1 h-3 w-3" />
-                Free Sample
+      <CardHeader className="space-y-3">
+        <div className="flex flex-col space-y-3">
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <CardTitle className="text-lg">{campaign.brand_name}</CardTitle>
+              <p className="text-sm text-muted-foreground">{campaign.product_name}</p>
+            </div>
+            <div className="flex flex-col gap-2 ml-2 shrink-0">
+              <Badge variant={campaign.campaign_type === 'retainer' ? 'default' : 'secondary'}>
+                {campaign.campaign_type === 'retainer' ? (
+                  <Clock className="mr-1 h-3 w-3" />
+                ) : (
+                  <Sparkles className="mr-1 h-3 w-3" />
+                )}
+                {campaign.campaign_type === 'retainer' ? 'Retainer' : 'Incentive'}
               </Badge>
-            )}
+              {campaign.free_samples && (
+                <Badge variant="outline" className="bg-accent/10">
+                  <Gift className="mr-1 h-3 w-3" />
+                  Free Sample
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground">{campaign.product_name}</p>
       </CardHeader>
       <CardContent>
         <div className="mb-4 space-y-2">
