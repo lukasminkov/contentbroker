@@ -11,33 +11,66 @@ export type Database = {
     Tables: {
       campaigns: {
         Row: {
+          about: string | null
           amount: number
+          application_end_date: string | null
+          application_start_date: string | null
+          brand_name: string | null
+          category: string | null
           created_at: string
           id: string
           name: string
+          platform: string | null
+          product_image_url: string | null
+          product_link: string | null
+          product_name: string | null
           profile_id: string | null
+          retainer_max: number | null
+          retainer_min: number | null
           status: string
           transaction_type: string
           type: string
           updated_at: string
         }
         Insert: {
+          about?: string | null
           amount: number
+          application_end_date?: string | null
+          application_start_date?: string | null
+          brand_name?: string | null
+          category?: string | null
           created_at?: string
           id?: string
           name: string
+          platform?: string | null
+          product_image_url?: string | null
+          product_link?: string | null
+          product_name?: string | null
           profile_id?: string | null
-          status: string
+          retainer_max?: number | null
+          retainer_min?: number | null
+          status?: string
           transaction_type: string
           type: string
           updated_at?: string
         }
         Update: {
+          about?: string | null
           amount?: number
+          application_end_date?: string | null
+          application_start_date?: string | null
+          brand_name?: string | null
+          category?: string | null
           created_at?: string
           id?: string
           name?: string
+          platform?: string | null
+          product_image_url?: string | null
+          product_link?: string | null
+          product_name?: string | null
           profile_id?: string | null
+          retainer_max?: number | null
+          retainer_min?: number | null
           status?: string
           transaction_type?: string
           type?: string
