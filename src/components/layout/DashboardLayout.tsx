@@ -2,7 +2,7 @@ import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupCon
   SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, 
   SidebarTrigger, SidebarHeader } from "@/components/ui/sidebar"
 import { Home, DollarSign, MessageSquare, BookOpen, List } from "lucide-react"
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 
 const menuItems = [
   {
@@ -33,10 +33,12 @@ const menuItems = [
 ]
 
 const DashboardLayout = () => {
+  const location = useLocation()
+
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <Sidebar variant="sidebar" collapsible="icon">
+      <div className="flex min-h-screen w-full bg-background p-4">
+        <Sidebar variant="floating" collapsible="icon" className="rounded-xl border-none bg-card/95 shadow-xl">
           <SidebarHeader className="relative flex h-14 items-center">
             <div className="flex items-center gap-2 px-3">
               {/* Logo placeholder */}
@@ -52,7 +54,12 @@ const DashboardLayout = () => {
                 <SidebarMenu>
                   {menuItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild tooltip={item.title}>
+                      <SidebarMenuButton 
+                        asChild 
+                        tooltip={item.title}
+                        className={location.pathname === item.path ? 
+                          "relative bg-primary/10 text-primary before:absolute before:-left-3 before:top-1/2 before:h-7 before:w-1 before:-translate-y-1/2 before:rounded-r-full before:bg-primary" : ""}
+                      >
                         <a href={item.path}>
                           <item.icon className="shrink-0" />
                           <span>{item.title}</span>
