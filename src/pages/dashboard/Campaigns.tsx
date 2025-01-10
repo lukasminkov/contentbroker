@@ -73,7 +73,9 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
           </div>
           <div className="flex items-center justify-between min-h-[24px]">
             <span className="text-sm text-muted-foreground">
-              {campaign.campaign_type === 'retainer' ? 'Retainer Range' : 'Campaign Value'}
+              {campaign.campaign_type === 'retainer' 
+                ? 'Monthly Retainer' 
+                : 'Campaign Budget'}
             </span>
             <span className="font-medium text-emerald-500">
               {campaign.campaign_type === 'retainer' 
