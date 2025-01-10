@@ -36,7 +36,7 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
   const totalCommission = campaign.base_commission + campaign.commission_boost
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg">
+    <Card className="overflow-hidden transition-all hover:shadow-lg h-full">
       <div className="aspect-video w-full overflow-hidden">
         <img 
           src={campaign.product_image_url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f"} 
@@ -63,22 +63,25 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Total Commission</span>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-emerald-500">{totalCommission}%</span>
+              <span className="font-medium text-foreground">{totalCommission}%</span>
               {campaign.commission_boost > 0 && (
-                <span className="text-sm text-purple-500">
+                <span className="text-sm text-emerald-500">
                   (+{campaign.commission_boost}%)
                 </span>
               )}
             </div>
           </div>
-          {campaign.campaign_type === 'retainer' && (
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Retainer Range</span>
-              <span className="font-medium text-emerald-500">
-                ${campaign.retainer_min} - ${campaign.retainer_max}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center justify-between min-h-[24px]">
+            <span className="text-sm text-muted-foreground">
+              {campaign.campaign_type === 'retainer' ? 'Retainer Range' : 'Campaign Value'}
+            </span>
+            <span className="font-medium text-emerald-500">
+              {campaign.campaign_type === 'retainer' 
+                ? `$${campaign.retainer_min} - $${campaign.retainer_max}`
+                : `$${campaign.amount}`
+              }
+            </span>
+          </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Platform</span>
             {getPlatformIcon(campaign.platform)}
