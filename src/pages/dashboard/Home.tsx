@@ -13,8 +13,21 @@ interface Campaign {
   name: string
   status: string
   amount: number
-  transaction_type: string
   created_at: string
+  brand_name: string
+  product_name: string
+  brand_shop_link: string
+  about: string | null
+  platform: string
+  product_image_url: string | null
+  category: string | null
+  videos_per_day: number
+  campaign_duration_days: number
+  tracking_link: string | null
+  retainer_min: number | null
+  retainer_max: number | null
+  application_start_date: string | null
+  application_end_date: string | null
 }
 
 interface Deliverable {
