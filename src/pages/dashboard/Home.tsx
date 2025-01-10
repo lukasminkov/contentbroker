@@ -72,7 +72,7 @@ const Home = () => {
   })
 
   const totalRetainers = campaigns?.reduce((sum, campaign) => 
-    campaign.transaction_type === 'retainer' ? sum + Number(campaign.amount) : sum, 0) || 0
+    sum + Number(campaign.amount), 0) || 0
 
   const isOverdue = (dueDate: string) => {
     return new Date(dueDate) < new Date()
@@ -217,7 +217,7 @@ const Home = () => {
                   </div>
                 </div>
                 <Badge variant="secondary" className="absolute top-2 right-2">
-                  {campaign.transaction_type}
+                  {campaign.platform}
                 </Badge>
               </div>
             ))}
