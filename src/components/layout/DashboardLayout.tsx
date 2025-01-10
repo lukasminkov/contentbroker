@@ -41,7 +41,7 @@ const DashboardLayout = () => {
             <div className="flex items-center gap-2">
               {/* Logo placeholder */}
               <div className="h-8 w-8 rounded bg-muted/20"></div>
-              <span className="font-semibold">ContentBroker</span>
+              <span className="font-semibold group-data-[collapsible=icon]:hidden">ContentBroker</span>
             </div>
             <SidebarTrigger className="absolute right-2 top-1/2 -translate-y-1/2" />
           </SidebarHeader>
