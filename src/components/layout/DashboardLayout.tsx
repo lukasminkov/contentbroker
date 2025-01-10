@@ -16,7 +16,7 @@ const menuItems = [
     path: "/dashboard/campaigns"
   },
   {
-    title: "Commissions",
+    title: "Increased Commissions",
     icon: DollarSign,
     path: "/dashboard/commissions"
   },
