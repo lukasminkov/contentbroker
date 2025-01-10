@@ -153,3 +153,5 @@ const Campaigns = () => {
     </div>
   )
 }
+
+export default Campaigns
