@@ -30,7 +30,7 @@ const getPlatformIcon = (platform: string) => {
   }
 }
 
-const CampaignCard = ({ campaign }: { campaign: any }) => {
+const CampaignCard = ({ campaign, deliverables }: { campaign: any, deliverables: any[] }) => {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="aspect-video w-full overflow-hidden">
@@ -58,9 +58,22 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
             <span className="text-sm text-muted-foreground">Platform</span>
             {getPlatformIcon(campaign.platform)}
           </div>
+          {deliverables.length > 0 && (
+            <div className="mt-4">
+              <h4 className="text-sm font-medium mb-2">Deliverables</h4>
+              <div className="space-y-2">
+                {deliverables.map((deliverable) => (
+                  <div key={deliverable.id} className="bg-muted/20 p-2 rounded-md">
+                    <p className="text-sm font-medium">{deliverable.title}</p>
+                    <p className="text-xs text-muted-foreground">{deliverable.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
-          <Button asChild variant="secondary" className="flex-1">
+          <Button asChild variant="outline" className="flex-1 bg-white text-foreground hover:bg-white/90">
             <a href={`/dashboard/campaigns/${campaign.id}`}>Learn More</a>
           </Button>
           <Button asChild className="flex-1">
@@ -76,13 +89,22 @@ const Campaigns = () => {
   const [search, setSearch] = useState("")
   const [category, setCategory] = useState("All")
 
-  const { data: campaigns, isLoading } = useQuery({
+  const { data: campaignsData, isLoading } = useQuery({
     queryKey: ["campaigns", search, category],
     queryFn: async () => {
-      console.log("Fetching campaigns with:", { search, category }) // Debug log
+      console.log("Fetching campaigns with:", { search, category })
       let query = supabase
         .from("campaigns")
-        .select("*")
+        .select(`
+          *,
+          deliverables (
+            id,
+            title,
+            description,
+            due_date,
+            status
+          )
+        `)
         .eq("status", "open")
         .order("created_at", { ascending: false })
 
@@ -97,11 +119,11 @@ const Campaigns = () => {
       const { data, error } = await query
       
       if (error) {
-        console.error("Error fetching campaigns:", error) // Debug log
+        console.error("Error fetching campaigns:", error)
         throw error
       }
       
-      console.log("Fetched campaigns:", data) // Debug log
+      console.log("Fetched campaigns with deliverables:", data)
       return data
     },
   })
@@ -149,7 +171,7 @@ const Campaigns = () => {
             </Card>
           ))}
         </div>
-      ) : campaigns?.length === 0 ? (
+      ) : campaignsData?.length === 0 ? (
         <div className="flex min-h-[400px] items-center justify-center rounded-lg bg-card/50">
           <p className="text-center text-muted-foreground">
             No campaigns found. Try adjusting your search or filters.
@@ -157,8 +179,12 @@ const Campaigns = () => {
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {campaigns?.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
+          {campaignsData?.map((campaign) => (
+            <CampaignCard 
+              key={campaign.id} 
+              campaign={campaign} 
+              deliverables={campaign.deliverables || []}
+            />
           ))}
         </div>
       )}
