@@ -64,7 +64,6 @@ const Home = () => {
     campaign.status === 'active'
   ).length || 0
 
-  // Get featured campaigns for preview
   const featuredCampaigns = campaigns?.slice(0, 4) || []
 
   const isOverdue = (dueDate: string) => {
@@ -73,7 +72,7 @@ const Home = () => {
 
   return (
     <div className="space-y-8">
-      {/* Stats Section */}
+      {/* First Row: Stats and To-Do */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="bg-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -87,6 +86,53 @@ const Home = () => {
             </p>
           </CardContent>
         </Card>
+
+        {/* To-Do List Card */}
+        <Card className="bg-card">
+          <CardHeader>
+            <CardTitle>To-Do List</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {deliverablesLoading ? (
+                <div className="text-center text-muted-foreground">Loading deliverables...</div>
+              ) : deliverables?.length === 0 ? (
+                <div className="text-center text-muted-foreground">No pending deliverables</div>
+              ) : (
+                deliverables?.map((deliverable) => (
+                  <div
+                    key={deliverable.id}
+                    className="flex items-center justify-between rounded-lg border p-4"
+                  >
+                    <div className="space-y-1">
+                      <p className="font-medium">{deliverable.title}</p>
+                      <p className="text-sm text-muted-foreground">{deliverable.description}</p>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline">
+                          {deliverable.campaign.name}
+                        </Badge>
+                        <span className={`text-sm ${isOverdue(deliverable.due_date) ? 'text-red-500' : 'text-muted-foreground'}`}>
+                          {isOverdue(deliverable.due_date) 
+                            ? `Overdue by ${formatDistanceToNow(new Date(deliverable.due_date))}`
+                            : `Due in ${formatDistanceToNow(new Date(deliverable.due_date))}`}
+                        </span>
+                      </div>
+                    </div>
+                    <Badge 
+                      variant={deliverable.status === 'overdue' ? 'destructive' : 'default'}
+                    >
+                      {deliverable.status}
+                    </Badge>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Second Row: Active Campaigns */}
+      <div className="grid gap-4">
         <Card className="bg-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Campaigns</CardTitle>
@@ -101,50 +147,7 @@ const Home = () => {
         </Card>
       </div>
 
-      {/* To-Do Section */}
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>To-Do List</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {deliverablesLoading ? (
-              <div className="text-center text-muted-foreground">Loading deliverables...</div>
-            ) : deliverables?.length === 0 ? (
-              <div className="text-center text-muted-foreground">No pending deliverables</div>
-            ) : (
-              deliverables?.map((deliverable) => (
-                <div
-                  key={deliverable.id}
-                  className="flex items-center justify-between rounded-lg border p-4"
-                >
-                  <div className="space-y-1">
-                    <p className="font-medium">{deliverable.title}</p>
-                    <p className="text-sm text-muted-foreground">{deliverable.description}</p>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">
-                        {deliverable.campaign.name}
-                      </Badge>
-                      <span className={`text-sm ${isOverdue(deliverable.due_date) ? 'text-red-500' : 'text-muted-foreground'}`}>
-                        {isOverdue(deliverable.due_date) 
-                          ? `Overdue by ${formatDistanceToNow(new Date(deliverable.due_date))}`
-                          : `Due in ${formatDistanceToNow(new Date(deliverable.due_date))}`}
-                      </span>
-                    </div>
-                  </div>
-                  <Badge 
-                    variant={deliverable.status === 'overdue' ? 'destructive' : 'default'}
-                  >
-                    {deliverable.status}
-                  </Badge>
-                </div>
-              ))
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Find Campaigns */}
+      {/* Third Row: Find Campaigns */}
       <Card className="bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Find Campaigns</CardTitle>
