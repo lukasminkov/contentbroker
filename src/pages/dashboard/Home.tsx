@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { DollarSign, TrendingUp, Users } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { DollarSign, TrendingUp, Users, ArrowRight } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client"
+import { Link } from "react-router-dom"
 
 interface Campaign {
   id: string
@@ -32,6 +34,9 @@ const Home = () => {
     campaign.transaction_type === 'retainer' ? sum + Number(campaign.amount) : sum, 0) || 0
 
   const activeCampaigns = campaigns?.filter(c => c.status === 'ongoing') || []
+
+  // Get featured campaigns for preview
+  const featuredCampaigns = campaigns?.slice(0, 4) || []
 
   return (
     <div className="space-y-8">
@@ -117,21 +122,39 @@ const Home = () => {
 
       {/* Find Campaigns */}
       <Card className="bg-card">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Find Campaigns</CardTitle>
+          <Link to="/dashboard/campaigns">
+            <Button variant="ghost" className="text-primary hover:text-primary-hover">
+              Explore All Campaigns <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </CardHeader>
         <CardContent>
-          <div className="flex -space-x-2">
-            {[...Array(5)].map((_, i) => (
-              <Avatar key={i} className="border-2 border-background">
-                <AvatarImage src={`https://i.pravatar.cc/150?img=${i + 1}`} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {featuredCampaigns.map((campaign) => (
+              <div key={campaign.id} className="group relative rounded-lg border p-4 hover:border-primary transition-colors">
+                <div className="flex items-center space-x-3 mb-3">
+                  <Avatar>
+                    <AvatarImage src={`https://i.pravatar.cc/150?u=${campaign.id}`} />
+                    <AvatarFallback>CP</AvatarFallback>
+                  </Avatar>
+                  <div className="truncate">
+                    <h4 className="font-medium truncate">{campaign.name}</h4>
+                    <p className="text-sm text-muted-foreground">
+                      ${Number(campaign.amount).toLocaleString()} / month
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="absolute top-2 right-2">
+                  {campaign.transaction_type}
+                </Badge>
+              </div>
             ))}
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">
+          <div className="mt-4 text-sm text-muted-foreground text-center">
             Connect with creators and find new campaign opportunities
-          </p>
+          </div>
         </CardContent>
       </Card>
     </div>
