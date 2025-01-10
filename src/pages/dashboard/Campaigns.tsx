@@ -17,52 +17,55 @@ const categories = [
   "Other"
 ]
 
-const CampaignCard = ({ campaign }: { campaign: any }) => (
-  <Card className="overflow-hidden transition-all hover:shadow-lg">
-    <div className="aspect-video w-full overflow-hidden">
-      <img 
-        src={campaign.product_image_url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f"} 
-        alt={campaign.product_name}
-        className="h-full w-full object-cover"
-      />
-    </div>
-    <CardHeader>
-      <div className="flex items-center justify-between">
-        <CardTitle className="text-lg">{campaign.brand_name}</CardTitle>
-        <span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">
-          {campaign.type}
-        </span>
+const CampaignCard = ({ campaign }: { campaign: any }) => {
+  console.log("Rendering campaign:", campaign) // Debug log
+  return (
+    <Card className="overflow-hidden transition-all hover:shadow-lg">
+      <div className="aspect-video w-full overflow-hidden">
+        <img 
+          src={campaign.product_image_url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f"} 
+          alt={campaign.product_name}
+          className="h-full w-full object-cover"
+        />
       </div>
-    </CardHeader>
-    <CardContent>
-      <div className="space-y-2">
+      <CardHeader>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Retainer Range</span>
-          <span className="font-medium">
-            ${campaign.retainer_min} - ${campaign.retainer_max}
+          <CardTitle className="text-lg">{campaign.brand_name}</CardTitle>
+          <span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">
+            {campaign.status}
           </span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Platform</span>
-          <span className="font-medium">{campaign.platform}</span>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Retainer Range</span>
+            <span className="font-medium">
+              ${campaign.retainer_min} - ${campaign.retainer_max}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Platform</span>
+            <span className="font-medium">{campaign.platform}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Applications</span>
+            <span className="font-medium">
+              {campaign.application_end_date ? (
+                `Until ${format(new Date(campaign.application_end_date), "MMM d, yyyy")}`
+              ) : (
+                "Open"
+              )}
+            </span>
+          </div>
+          <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+            {campaign.about}
+          </p>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Applications</span>
-          <span className="font-medium">
-            {campaign.application_end_date ? (
-              `Until ${format(new Date(campaign.application_end_date), "MMM d, yyyy")}`
-            ) : (
-              "Open"
-            )}
-          </span>
-        </div>
-        <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-          {campaign.about}
-        </p>
-      </div>
-    </CardContent>
-  </Card>
-)
+      </CardContent>
+    </Card>
+  )
+}
 
 const Campaigns = () => {
   const [search, setSearch] = useState("")
@@ -71,10 +74,11 @@ const Campaigns = () => {
   const { data: campaigns, isLoading } = useQuery({
     queryKey: ["campaigns", search, category],
     queryFn: async () => {
+      console.log("Fetching campaigns with:", { search, category }) // Debug log
       let query = supabase
         .from("campaigns")
         .select("*")
-        .eq("status", "active")
+        .eq("status", "open")
         .order("created_at", { ascending: false })
 
       if (search) {
@@ -86,8 +90,13 @@ const Campaigns = () => {
       }
 
       const { data, error } = await query
-
-      if (error) throw error
+      
+      if (error) {
+        console.error("Error fetching campaigns:", error) // Debug log
+        throw error
+      }
+      
+      console.log("Fetched campaigns:", data) // Debug log
       return data
     },
   })
