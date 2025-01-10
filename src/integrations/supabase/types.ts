@@ -15,66 +15,69 @@ export type Database = {
           amount: number
           application_end_date: string | null
           application_start_date: string | null
-          brand_name: string | null
+          brand_name: string
+          brand_shop_link: string
+          campaign_duration_days: number
           category: string | null
           created_at: string
           id: string
           name: string
-          platform: string | null
+          platform: string
           product_image_url: string | null
-          product_link: string | null
-          product_name: string | null
+          product_name: string
           profile_id: string | null
           retainer_max: number | null
           retainer_min: number | null
           status: string
-          transaction_type: string
-          type: string
+          tracking_link: string | null
           updated_at: string
+          videos_per_day: number
         }
         Insert: {
           about?: string | null
           amount: number
           application_end_date?: string | null
           application_start_date?: string | null
-          brand_name?: string | null
+          brand_name?: string
+          brand_shop_link?: string
+          campaign_duration_days?: number
           category?: string | null
           created_at?: string
           id?: string
           name: string
-          platform?: string | null
+          platform?: string
           product_image_url?: string | null
-          product_link?: string | null
-          product_name?: string | null
+          product_name?: string
           profile_id?: string | null
           retainer_max?: number | null
           retainer_min?: number | null
           status?: string
-          transaction_type: string
-          type: string
+          tracking_link?: string | null
           updated_at?: string
+          videos_per_day?: number
         }
         Update: {
           about?: string | null
           amount?: number
           application_end_date?: string | null
           application_start_date?: string | null
-          brand_name?: string | null
+          brand_name?: string
+          brand_shop_link?: string
+          campaign_duration_days?: number
           category?: string | null
           created_at?: string
           id?: string
           name?: string
-          platform?: string | null
+          platform?: string
           product_image_url?: string | null
-          product_link?: string | null
-          product_name?: string | null
+          product_name?: string
           profile_id?: string | null
           retainer_max?: number | null
           retainer_min?: number | null
           status?: string
-          transaction_type?: string
-          type?: string
+          tracking_link?: string | null
           updated_at?: string
+          videos_per_day?: number
         }
         Relationships: [
           {
