@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DollarSign, ArrowRight } from "lucide-react"
+import { DollarSign, Users, ArrowRight } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client"
 import { Link } from "react-router-dom"
 import { formatDistanceToNow } from "date-fns"
@@ -60,6 +60,10 @@ const Home = () => {
   const totalRetainers = campaigns?.reduce((sum, campaign) => 
     campaign.transaction_type === 'retainer' ? sum + Number(campaign.amount) : sum, 0) || 0
 
+  const activeCampaigns = campaigns?.filter(campaign => 
+    campaign.status === 'active'
+  ).length || 0
+
   // Get featured campaigns for preview
   const featuredCampaigns = campaigns?.slice(0, 4) || []
 
@@ -70,7 +74,7 @@ const Home = () => {
   return (
     <div className="space-y-8">
       {/* Stats Section */}
-      <div className="grid gap-4 md:grid-cols-1">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card className="bg-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Retainers</CardTitle>
@@ -80,6 +84,18 @@ const Home = () => {
             <div className="text-2xl font-bold">${totalRetainers.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
               Active monthly retainers
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Campaigns</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{activeCampaigns}</div>
+            <p className="text-xs text-muted-foreground">
+              Currently running campaigns
             </p>
           </CardContent>
         </Card>
