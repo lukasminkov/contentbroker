@@ -152,6 +152,7 @@ export type Database = {
           instagram_url: string | null
           last_name: string
           profile_picture_url: string | null
+          tier: Database["public"]["Enums"]["creator_tier"]
           updated_at: string
           user_id: string | null
         }
@@ -166,6 +167,7 @@ export type Database = {
           instagram_url?: string | null
           last_name: string
           profile_picture_url?: string | null
+          tier?: Database["public"]["Enums"]["creator_tier"]
           updated_at?: string
           user_id?: string | null
         }
@@ -180,6 +182,7 @@ export type Database = {
           instagram_url?: string | null
           last_name?: string
           profile_picture_url?: string | null
+          tier?: Database["public"]["Enums"]["creator_tier"]
           updated_at?: string
           user_id?: string | null
         }
@@ -225,10 +228,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_tier: {
+        Args: {
+          gmv: number
+        }
+        Returns: Database["public"]["Enums"]["creator_tier"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      creator_tier:
+        | "bronze"
+        | "silver"
+        | "gold"
+        | "platinum"
+        | "diamond"
+        | "elite"
     }
     CompositeTypes: {
       [_ in never]: never
