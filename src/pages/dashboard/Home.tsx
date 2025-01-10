@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DollarSign, Users, ArrowRight } from "lucide-react"
+import { DollarSign, Users, ArrowRight, MessageSquare } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client"
 import { Link } from "react-router-dom"
 import { formatDistanceToNow } from "date-fns"
@@ -33,6 +33,7 @@ const Home = () => {
       const { data, error } = await supabase
         .from('campaigns')
         .select('*')
+        .eq('status', 'active')
         .order('created_at', { ascending: false })
       
       if (error) throw error
@@ -59,12 +60,6 @@ const Home = () => {
 
   const totalRetainers = campaigns?.reduce((sum, campaign) => 
     campaign.transaction_type === 'retainer' ? sum + Number(campaign.amount) : sum, 0) || 0
-
-  const activeCampaigns = campaigns?.filter(campaign => 
-    campaign.status === 'active'
-  ).length || 0
-
-  const featuredCampaigns = campaigns?.slice(0, 4) || []
 
   const isOverdue = (dueDate: string) => {
     return new Date(dueDate) < new Date()
@@ -134,15 +129,50 @@ const Home = () => {
       {/* Second Row: Active Campaigns */}
       <div className="grid gap-4">
         <Card className="bg-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Campaigns</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Active Campaigns</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{activeCampaigns}</div>
-            <p className="text-xs text-muted-foreground">
-              Currently running campaigns
-            </p>
+            <div className="space-y-4">
+              {campaignsLoading ? (
+                <div className="text-center text-muted-foreground">Loading campaigns...</div>
+              ) : campaigns?.length === 0 ? (
+                <div className="text-center text-muted-foreground">No active campaigns</div>
+              ) : (
+                campaigns?.map((campaign) => (
+                  <div
+                    key={campaign.id}
+                    className="flex items-center justify-between rounded-lg border p-4 hover:border-primary transition-colors"
+                  >
+                    <div className="flex items-center space-x-4 flex-1">
+                      <Avatar>
+                        <AvatarImage src={`https://i.pravatar.cc/150?u=${campaign.id}`} />
+                        <AvatarFallback>CP</AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-1 flex-1">
+                        <h4 className="font-medium">{campaign.name}</h4>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary">
+                            {deliverables?.filter(d => d.campaign.id === campaign.id).length || 0} Deliverables
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">
+                            ${Number(campaign.amount).toLocaleString()} / month
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Link to={`/dashboard/campaigns/${campaign.id}`}>
+                          <Button variant="ghost" size="sm" className="text-primary hover:text-primary-hover">
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            View Campaign
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -159,7 +189,7 @@ const Home = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {featuredCampaigns.map((campaign) => (
+            {campaigns?.slice(0, 4).map((campaign) => (
               <div key={campaign.id} className="group relative rounded-lg border p-4 hover:border-primary transition-colors">
                 <div className="flex items-center space-x-3 mb-3">
                   <Avatar>
