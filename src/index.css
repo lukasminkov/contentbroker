@@ -6,8 +6,8 @@
   :root {
     --background: 222 47% 11%;
     --foreground: 0 0% 100%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 0 0% 100%;
+    --input: 0 0% 100%;
     --ring: 224.3 76.3% 48%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -35,7 +35,7 @@
 }
 
 .form-input {
-  @apply w-full bg-muted text-foreground rounded-md px-4 py-2 border border-muted-foreground/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200;
+  @apply w-full bg-muted text-foreground rounded-md px-4 py-2 border border-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-200;
 }
 
 .form-label {
