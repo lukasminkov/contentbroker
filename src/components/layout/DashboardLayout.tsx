@@ -41,23 +41,23 @@ const DashboardLayout = () => {
             <div className="flex items-center gap-2">
               {/* Logo placeholder */}
               <div className="h-8 w-8 rounded bg-muted/20"></div>
-              <span className="font-semibold">ContentBroker</span>
+              <span className="font-semibold group-data-[collapsible=icon]:hidden">ContentBroker</span>
             </div>
-            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 group-data-[collapsible=icon]:hidden">
               <SidebarTrigger />
             </div>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+              <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">Dashboard</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {menuItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild tooltip={item.title}>
                         <a href={item.path}>
-                          <item.icon />
-                          <span>{item.title}</span>
+                          <item.icon className="shrink-0" />
+                          <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
                         </a>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
