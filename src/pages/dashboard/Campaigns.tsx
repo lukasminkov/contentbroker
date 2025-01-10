@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
-import { Instagram, Video, Sparkles, Clock, Gift } from "lucide-react"
+import { DollarSign, Video, Sparkles, Gift } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 const categories = [
@@ -52,9 +52,12 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
               <p className="text-sm text-muted-foreground">{campaign.product_name}</p>
             </div>
             <div className="flex flex-col gap-2 ml-2 shrink-0">
-              <Badge variant={campaign.campaign_type === 'retainer' ? 'default' : 'secondary'}>
+              <Badge 
+                variant={campaign.campaign_type === 'retainer' ? 'default' : 'secondary'}
+                className={campaign.campaign_type === 'incentive' ? 'bg-orange-500 hover:bg-orange-600' : ''}
+              >
                 {campaign.campaign_type === 'retainer' ? (
-                  <Clock className="mr-1 h-3 w-3" />
+                  <DollarSign className="mr-1 h-3 w-3" />
                 ) : (
                   <Sparkles className="mr-1 h-3 w-3" />
                 )}
