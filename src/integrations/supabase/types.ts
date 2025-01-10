@@ -53,6 +53,57 @@ export type Database = {
           },
         ]
       }
+      deliverables: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          description: string | null
+          due_date: string
+          id: string
+          profile_id: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          description?: string | null
+          due_date: string
+          id?: string
+          profile_id?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string
+          id?: string
+          profile_id?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deliverables_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliverables_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           about: string | null
