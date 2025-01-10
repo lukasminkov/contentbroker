@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
-import { BrandTiktok } from "lucide-react"
+import { Video } from "lucide-react"
 
 const categories = [
   "All",
@@ -19,7 +19,6 @@ const categories = [
 ]
 
 const CampaignCard = ({ campaign }: { campaign: any }) => {
-  console.log("Rendering campaign:", campaign)
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="aspect-video w-full overflow-hidden">
@@ -45,7 +44,7 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Platform</span>
-            <BrandTiktok className="h-5 w-5" />
+            <Video className="h-5 w-5" />
           </div>
         </div>
         <div className="flex gap-2">
@@ -154,5 +153,3 @@ const Campaigns = () => {
     </div>
   )
 }
-
-export default Campaigns

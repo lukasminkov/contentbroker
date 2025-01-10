@@ -1,7 +1,7 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, 
   SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, 
   SidebarTrigger, SidebarHeader } from "@/components/ui/sidebar"
-import { Home, DollarSign, MessageSquare, BookOpen, List } from "lucide-react"
+import { Home, List } from "lucide-react"
 import { Outlet, useLocation } from "react-router-dom"
 
 const menuItems = [
@@ -14,21 +14,6 @@ const menuItems = [
     title: "Campaigns",
     icon: List,
     path: "/dashboard/campaigns"
-  },
-  {
-    title: "Increased Commissions",
-    icon: DollarSign,
-    path: "/dashboard/commissions"
-  },
-  {
-    title: "Chat",
-    icon: MessageSquare,
-    path: "/dashboard/chat"
-  },
-  {
-    title: "Resources",
-    icon: BookOpen,
-    path: "/dashboard/resources"
   }
 ]
 
