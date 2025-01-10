@@ -31,6 +31,7 @@ const getPlatformIcon = (platform: string) => {
 }
 
 const CampaignCard = ({ campaign, deliverables }: { campaign: any, deliverables: any[] }) => {
+  console.log("Deliverables for campaign:", campaign.id, deliverables) // Debug log
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="aspect-video w-full overflow-hidden">
@@ -58,11 +59,11 @@ const CampaignCard = ({ campaign, deliverables }: { campaign: any, deliverables:
             <span className="text-sm text-muted-foreground">Platform</span>
             {getPlatformIcon(campaign.platform)}
           </div>
-          {deliverables && deliverables.length > 0 && (
+          {campaign.deliverables && campaign.deliverables.length > 0 && (
             <div className="mt-4">
               <h4 className="text-sm font-medium mb-2">Deliverables</h4>
               <div className="space-y-2">
-                {deliverables.map((deliverable) => (
+                {campaign.deliverables.map((deliverable: any) => (
                   <div key={deliverable.id} className="bg-muted/20 p-2 rounded-md">
                     <p className="text-sm font-medium">{deliverable.title}</p>
                     <p className="text-xs text-muted-foreground">{deliverable.description}</p>
