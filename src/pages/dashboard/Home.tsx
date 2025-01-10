@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DollarSign, Users, ArrowRight, MessageSquare } from "lucide-react"
+import { Users, ArrowRight, MessageSquare } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client"
 import { Link } from "react-router-dom"
 import { formatDistanceToNow } from "date-fns"
@@ -90,7 +90,6 @@ const Home = () => {
         <Card className="bg-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Retainers</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
