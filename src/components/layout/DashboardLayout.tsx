@@ -38,7 +38,7 @@ const DashboardLayout = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background p-4">
-        <Sidebar variant="floating" collapsible="icon" className="rounded-xl border-none bg-card/95 shadow-xl">
+        <Sidebar variant="floating" collapsible="icon" className="rounded-xl bg-card/95 shadow-xl">
           <SidebarHeader className="relative flex h-14 items-center">
             <div className="flex items-center gap-2 px-3">
               {/* Logo placeholder */}
