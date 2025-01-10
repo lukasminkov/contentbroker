@@ -66,7 +66,7 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
               <span className="font-medium text-emerald-500">{totalCommission}%</span>
               {campaign.commission_boost > 0 && (
                 <span className="text-sm text-purple-500">
-                  (+{campaign.commission_boost}% boost)
+                  (+{campaign.commission_boost}%)
                 </span>
               )}
             </div>
