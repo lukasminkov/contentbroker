@@ -31,7 +31,7 @@ const getPlatformIcon = (platform: string) => {
 }
 
 const CampaignCard = ({ campaign }: { campaign: any }) => {
-  console.log("Campaign data:", campaign) // Debug log to see full campaign data
+  console.log("Campaign data:", campaign)
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="aspect-video w-full overflow-hidden">
@@ -61,20 +61,16 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
           </div>
           <div className="mt-4">
             <h4 className="text-sm font-medium mb-2">Deliverables</h4>
-            {campaign.deliverables && campaign.deliverables.length > 0 ? (
-              <div className="space-y-2">
-                {campaign.deliverables.map((deliverable: any) => (
-                  <div key={deliverable.id} className="bg-muted/20 p-2 rounded-md">
-                    <p className="text-sm font-medium">{deliverable.title}</p>
-                    {deliverable.description && (
-                      <p className="text-xs text-muted-foreground">{deliverable.description}</p>
-                    )}
-                  </div>
-                ))}
+            <div className="space-y-2">
+              <div className="bg-muted/20 p-2 rounded-md">
+                <p className="text-sm font-medium">
+                  {campaign.videos_per_day} video{campaign.videos_per_day > 1 ? 's' : ''} per day
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  For {campaign.campaign_duration_days} days (Total: {campaign.videos_per_day * campaign.campaign_duration_days} videos)
+                </p>
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">No deliverables specified</p>
-            )}
+            </div>
           </div>
         </div>
         <div className="flex gap-2">
