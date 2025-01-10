@@ -1,6 +1,6 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, 
   SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, 
-  SidebarTrigger } from "@/components/ui/sidebar"
+  SidebarTrigger, SidebarHeader } from "@/components/ui/sidebar"
 import { Home, DollarSign, MessageSquare, BookOpen, List } from "lucide-react"
 import { Outlet } from "react-router-dom"
 
@@ -37,6 +37,14 @@ const DashboardLayout = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <Sidebar>
+          <SidebarHeader className="relative flex h-14 items-center justify-between px-4">
+            <div className="flex items-center gap-2">
+              {/* Logo placeholder */}
+              <div className="h-8 w-8 rounded bg-muted/20"></div>
+              <span className="font-semibold">ContentBroker</span>
+            </div>
+            <SidebarTrigger />
+          </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
@@ -59,7 +67,6 @@ const DashboardLayout = () => {
         </Sidebar>
         <main className="flex-1 p-6">
           <div className="container mx-auto">
-            <SidebarTrigger className="mb-4" />
             <Outlet />
           </div>
         </main>
