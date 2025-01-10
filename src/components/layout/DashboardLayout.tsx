@@ -37,13 +37,15 @@ const DashboardLayout = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <Sidebar>
-          <SidebarHeader className="relative flex h-14 items-center justify-between px-4">
+          <SidebarHeader className="relative flex h-14 items-center px-4">
             <div className="flex items-center gap-2">
               {/* Logo placeholder */}
               <div className="h-8 w-8 rounded bg-muted/20"></div>
               <span className="font-semibold">ContentBroker</span>
             </div>
-            <SidebarTrigger />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+              <SidebarTrigger />
+            </div>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
