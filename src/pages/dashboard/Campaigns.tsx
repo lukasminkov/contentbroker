@@ -50,7 +50,7 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
       <CardContent>
         <div className="mb-4 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Retainers</span>
+            <span className="text-sm text-muted-foreground">Retainer Range</span>
             <span className="font-medium text-emerald-500">
               ${campaign.retainer_min} - ${campaign.retainer_max}
             </span>
