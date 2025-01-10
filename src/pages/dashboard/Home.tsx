@@ -96,7 +96,7 @@ const Home = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Total Earned</span>
-                <span className="text-lg font-bold text-[#0EA5E9]">
+                <span className="text-lg font-bold text-[#22C55E]">
                   ${totalRetainersEarned.toLocaleString()}
                 </span>
               </div>
