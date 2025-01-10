@@ -18,7 +18,7 @@ const categories = [
 ]
 
 const CampaignCard = ({ campaign }: { campaign: any }) => (
-  <Card className="overflow-hidden transition-all hover:shadow-lg">
+  <Card className="overflow-hidden transition-all hover:shadow-lg border-white">
     <div className="aspect-video w-full overflow-hidden">
       <img 
         src={campaign.product_image_url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f"} 
@@ -29,7 +29,7 @@ const CampaignCard = ({ campaign }: { campaign: any }) => (
     <CardHeader>
       <div className="flex items-center justify-between">
         <CardTitle className="text-lg">{campaign.brand_name}</CardTitle>
-        <span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">
+        <span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary border border-white">
           {campaign.type}
         </span>
       </div>
@@ -100,11 +100,11 @@ const Campaigns = () => {
             placeholder="Search campaigns..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full"
+            className="w-full border-white"
           />
         </div>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="w-full md:w-[180px]">
+          <SelectTrigger className="w-full md:w-[180px] border-white">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
@@ -120,7 +120,7 @@ const Campaigns = () => {
       {isLoading ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
+            <Card key={i} className="animate-pulse border-white">
               <div className="aspect-video w-full bg-muted" />
               <CardHeader>
                 <div className="h-6 w-2/3 rounded bg-muted" />
@@ -136,7 +136,7 @@ const Campaigns = () => {
           ))}
         </div>
       ) : campaigns?.length === 0 ? (
-        <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-dashed">
+        <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-white border-dashed">
           <p className="text-center text-muted-foreground">
             No campaigns found. Try adjusting your search or filters.
           </p>
