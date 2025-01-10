@@ -15,11 +15,15 @@ export type Database = {
           amount: number
           application_end_date: string | null
           application_start_date: string | null
+          base_commission: number
           brand_name: string
           brand_shop_link: string
           campaign_duration_days: number
+          campaign_type: string
           category: string | null
+          commission_boost: number
           created_at: string
+          gmv_target: number[] | null
           id: string
           name: string
           platform: string
@@ -38,11 +42,15 @@ export type Database = {
           amount: number
           application_end_date?: string | null
           application_start_date?: string | null
+          base_commission?: number
           brand_name?: string
           brand_shop_link?: string
           campaign_duration_days?: number
+          campaign_type?: string
           category?: string | null
+          commission_boost?: number
           created_at?: string
+          gmv_target?: number[] | null
           id?: string
           name: string
           platform?: string
@@ -61,11 +69,15 @@ export type Database = {
           amount?: number
           application_end_date?: string | null
           application_start_date?: string | null
+          base_commission?: number
           brand_name?: string
           brand_shop_link?: string
           campaign_duration_days?: number
+          campaign_type?: string
           category?: string | null
+          commission_boost?: number
           created_at?: string
+          gmv_target?: number[] | null
           id?: string
           name?: string
           platform?: string
