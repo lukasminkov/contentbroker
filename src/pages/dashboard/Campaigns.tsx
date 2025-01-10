@@ -58,7 +58,7 @@ const CampaignCard = ({ campaign, deliverables }: { campaign: any, deliverables:
             <span className="text-sm text-muted-foreground">Platform</span>
             {getPlatformIcon(campaign.platform)}
           </div>
-          {deliverables.length > 0 && (
+          {deliverables && deliverables.length > 0 && (
             <div className="mt-4">
               <h4 className="text-sm font-medium mb-2">Deliverables</h4>
               <div className="space-y-2">
@@ -73,7 +73,11 @@ const CampaignCard = ({ campaign, deliverables }: { campaign: any, deliverables:
           )}
         </div>
         <div className="flex gap-2">
-          <Button asChild variant="outline" className="flex-1 bg-white text-foreground hover:bg-white/90">
+          <Button 
+            asChild 
+            variant="outline" 
+            className="flex-1 bg-transparent hover:bg-transparent hover:text-primary transition-colors"
+          >
             <a href={`/dashboard/campaigns/${campaign.id}`}>Learn More</a>
           </Button>
           <Button asChild className="flex-1">
