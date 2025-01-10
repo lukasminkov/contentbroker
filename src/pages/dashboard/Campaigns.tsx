@@ -25,7 +25,7 @@ const getPlatformIcon = (platform: string) => {
     case 'tiktok':
       return <Video className="h-5 w-5" />
     case 'instagram':
-      return <Instagram className="h-5 w-5" />
+      return null
     default:
       return null
   }
