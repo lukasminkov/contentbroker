@@ -30,8 +30,8 @@ const getPlatformIcon = (platform: string) => {
   }
 }
 
-const CampaignCard = ({ campaign, deliverables }: { campaign: any, deliverables: any[] }) => {
-  console.log("Deliverables for campaign:", campaign.id, deliverables) // Debug log
+const CampaignCard = ({ campaign }: { campaign: any }) => {
+  console.log("Campaign data:", campaign) // Debug log to see full campaign data
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="aspect-video w-full overflow-hidden">
@@ -59,19 +59,23 @@ const CampaignCard = ({ campaign, deliverables }: { campaign: any, deliverables:
             <span className="text-sm text-muted-foreground">Platform</span>
             {getPlatformIcon(campaign.platform)}
           </div>
-          {campaign.deliverables && campaign.deliverables.length > 0 && (
-            <div className="mt-4">
-              <h4 className="text-sm font-medium mb-2">Deliverables</h4>
+          <div className="mt-4">
+            <h4 className="text-sm font-medium mb-2">Deliverables</h4>
+            {campaign.deliverables && campaign.deliverables.length > 0 ? (
               <div className="space-y-2">
                 {campaign.deliverables.map((deliverable: any) => (
                   <div key={deliverable.id} className="bg-muted/20 p-2 rounded-md">
                     <p className="text-sm font-medium">{deliverable.title}</p>
-                    <p className="text-xs text-muted-foreground">{deliverable.description}</p>
+                    {deliverable.description && (
+                      <p className="text-xs text-muted-foreground">{deliverable.description}</p>
+                    )}
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-sm text-muted-foreground">No deliverables specified</p>
+            )}
+          </div>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -187,8 +191,7 @@ const Campaigns = () => {
           {campaignsData?.map((campaign) => (
             <CampaignCard 
               key={campaign.id} 
-              campaign={campaign} 
-              deliverables={campaign.deliverables || []}
+              campaign={campaign}
             />
           ))}
         </div>
