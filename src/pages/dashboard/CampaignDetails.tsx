@@ -11,15 +11,25 @@ const CampaignDetails = () => {
   const { data: campaign, isLoading } = useQuery({
     queryKey: ["campaign", id],
     queryFn: async () => {
+      console.log("Fetching campaign with ID:", id)
+      
+      if (!id) throw new Error("Campaign ID is required")
+      
       const { data, error } = await supabase
         .from("campaigns")
         .select("*")
         .eq("id", id)
         .single()
       
-      if (error) throw error
+      if (error) {
+        console.error("Error fetching campaign:", error)
+        throw error
+      }
+      
+      console.log("Fetched campaign:", data)
       return data
     },
+    enabled: !!id,
   })
 
   if (isLoading) {
