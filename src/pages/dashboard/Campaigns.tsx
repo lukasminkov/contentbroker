@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
-import { Video } from "lucide-react"
+import { Instagram, Tiktok } from "lucide-react"
 
 const categories = [
   "All",
@@ -17,6 +17,18 @@ const categories = [
   "Health",
   "Other"
 ]
+
+const getPlatformIcon = (platform: string) => {
+  switch (platform.toLowerCase()) {
+    case 'tiktok shop':
+    case 'tiktok':
+      return <Tiktok className="h-5 w-5" />
+    case 'instagram':
+      return <Instagram className="h-5 w-5" />
+    default:
+      return null
+  }
+}
 
 const CampaignCard = ({ campaign }: { campaign: any }) => {
   return (
@@ -44,7 +56,7 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Platform</span>
-            <Video className="h-5 w-5" />
+            {getPlatformIcon(campaign.platform)}
           </div>
         </div>
         <div className="flex gap-2">
