@@ -9,7 +9,7 @@ const LandingPage = () => {
       <nav className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
-            Creator Connector
+            contentbroker.io
           </h1>
           <div className="space-x-4">
             <Link to="/auth/creator">
