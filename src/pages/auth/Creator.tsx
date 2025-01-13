@@ -57,22 +57,32 @@ export default function Creator() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.verifyOtp({
+      const { error: verifyError } = await supabase.auth.verifyOtp({
         email,
         token: otp,
         type: "signup",
       })
 
-      if (error) throw error
+      if (verifyError) throw verifyError
+
+      // After successful verification, check if user has completed onboarding
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .single()
 
       toast({
         title: "Success!",
         description: "Your account has been verified.",
       })
       
-      setTimeout(() => {
+      // If profile exists and has required fields, go to dashboard
+      // Otherwise, go to onboarding
+      if (profile?.first_name && profile?.last_name && profile?.date_of_birth) {
+        navigate("/dashboard")
+      } else {
         navigate("/onboarding")
-      }, 500)
+      }
       
     } catch (err: any) {
       setError(err.message)
