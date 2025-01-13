@@ -6,6 +6,7 @@ import CampaignDetails from "@/pages/dashboard/CampaignDetails"
 import CampaignApplication from "@/pages/dashboard/CampaignApplication"
 import Home from "@/pages/dashboard/Home"
 import LandingPage from "@/pages/LandingPage"
+import Creator from "@/pages/auth/Creator"
 
 // Create a client
 const queryClient = new QueryClient({
@@ -23,6 +24,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/auth/creator" element={<Creator />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Home />} />
             <Route path="campaigns" element={<Campaigns />} />
