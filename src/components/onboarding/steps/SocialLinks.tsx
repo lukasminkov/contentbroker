@@ -57,7 +57,9 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
     onNext();
   };
 
-  const isValid = formData.tiktokAccounts[0]?.url && formData.tiktokAccounts[0]?.niche;
+  const isValid = formData.tiktokAccounts[0]?.url && 
+                  formData.tiktokAccounts[0]?.niche && 
+                  formData.gmv;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -124,6 +126,20 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         Add Another TikTok Account
       </Button>
 
+      <div className="mt-6 p-4 bg-muted rounded-lg">
+        <label className="form-label">Total TikTok Shop GMV</label>
+        <div className="text-sm text-muted-foreground mb-2">
+          Enter your total GMV across all TikTok Shop accounts
+        </div>
+        <Input
+          value={formData.gmv}
+          onChange={(e) => updateFormData({ gmv: e.target.value })}
+          className="form-input"
+          placeholder="Enter your total TikTok Shop GMV"
+          required
+        />
+      </div>
+
       <div>
         <label className="form-label">Instagram (Optional)</label>
         <Input
@@ -131,17 +147,6 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
           onChange={(e) => updateFormData({ instagram: e.target.value })}
           className="form-input"
           placeholder="https://instagram.com/username"
-        />
-      </div>
-
-      <div>
-        <label className="form-label">TikTok Shop GMV</label>
-        <Input
-          value={formData.gmv}
-          onChange={(e) => updateFormData({ gmv: e.target.value })}
-          className="form-input"
-          placeholder="Enter your GMV"
-          required
         />
       </div>
 
