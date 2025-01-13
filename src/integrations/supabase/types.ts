@@ -172,6 +172,8 @@ export type Database = {
           about: string | null
           created_at: string
           date_of_birth: string
+          email: string | null
+          email_verified: boolean | null
           first_name: string
           gmv: number | null
           gmv_proof_url: string | null
@@ -187,6 +189,8 @@ export type Database = {
           about?: string | null
           created_at?: string
           date_of_birth: string
+          email?: string | null
+          email_verified?: boolean | null
           first_name: string
           gmv?: number | null
           gmv_proof_url?: string | null
@@ -202,6 +206,8 @@ export type Database = {
           about?: string | null
           created_at?: string
           date_of_birth?: string
+          email?: string | null
+          email_verified?: boolean | null
           first_name?: string
           gmv?: number | null
           gmv_proof_url?: string | null
