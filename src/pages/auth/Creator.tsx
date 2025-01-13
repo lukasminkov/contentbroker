@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
+import { InputOTP } from "@/components/ui/input-otp"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
 
@@ -124,21 +124,9 @@ export default function Creator() {
             <div className="space-y-2">
               <Label htmlFor="otp">Verification code</Label>
               <InputOTP
-                maxLength={6}
                 value={otp}
                 onChange={setOtp}
-                render={({ slots }) => (
-                  <InputOTPGroup className="gap-2 justify-center">
-                    {slots.map((slot, idx) => (
-                      <InputOTPSlot 
-                        key={idx} 
-                        {...slot} 
-                        index={idx}
-                        className="w-10 h-12 text-2xl font-bold bg-card border-2 border-muted text-foreground focus:border-primary focus:ring-1 focus:ring-primary"
-                      />
-                    ))}
-                  </InputOTPGroup>
-                )}
+                maxLength={6}
               />
             </div>
             <Button

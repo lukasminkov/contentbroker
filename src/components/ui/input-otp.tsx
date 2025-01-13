@@ -1,81 +1,92 @@
 import * as React from "react"
-import { OTPInput, OTPInputContext } from "input-otp"
-import { Dot } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 
-const InputOTP = React.forwardRef<
-  React.ElementRef<typeof OTPInput>,
-  React.ComponentPropsWithoutRef<typeof OTPInput>
->(({ className, containerClassName, ...props }, ref) => (
-  <OTPInput
-    ref={ref}
-    containerClassName={cn(
-      "flex items-center gap-2 has-[:disabled]:opacity-50",
-      containerClassName
-    )}
-    className={cn("disabled:cursor-not-allowed", className)}
-    {...props}
-  />
-))
-InputOTP.displayName = "InputOTP"
-
-const InputOTPGroup = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div">
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex items-center", className)} {...props} />
-))
-InputOTPGroup.displayName = "InputOTPGroup"
-
-interface OTPSlot {
-  char?: string
-  hasFakeCaret?: boolean
-  isActive?: boolean
+interface InputOTPProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  value: string;
+  onChange: (value: string) => void;
+  maxLength?: number;
 }
 
-const InputOTPSlot = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div"> & { index: number }
->(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
-  const { slots = [] } = inputOTPContext || {}
-  const slot = slots[index] || {} as OTPSlot
-  const { char = "", hasFakeCaret = false, isActive = false } = slot
+const InputOTP = React.forwardRef<HTMLDivElement, InputOTPProps>(
+  ({ className, value, onChange, maxLength = 6, ...props }, ref) => {
+    const inputRefs = React.useRef<(HTMLInputElement | null)[]>([])
+    
+    const focusNextInput = (index: number) => {
+      if (index < maxLength - 1) {
+        inputRefs.current[index + 1]?.focus()
+      }
+    }
 
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
-        isActive && "z-10 ring-2 ring-ring ring-offset-background",
-        className
-      )}
-      {...props}
-    >
-      {char && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-foreground text-lg font-semibold">{char}</span>
-        </div>
-      )}
-      {hasFakeCaret && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
-        </div>
-      )}
-    </div>
-  )
-})
-InputOTPSlot.displayName = "InputOTPSlot"
+    const focusPrevInput = (index: number) => {
+      if (index > 0) {
+        inputRefs.current[index - 1]?.focus()
+      }
+    }
 
-const InputOTPSeparator = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div">
->(({ ...props }, ref) => (
-  <div ref={ref} role="separator" {...props}>
-    <Dot />
-  </div>
-))
-InputOTPSeparator.displayName = "InputOTPSeparator"
+    const handleInputChange = (index: number, inputValue: string) => {
+      const newValue = value.split('')
+      newValue[index] = inputValue
+      const updatedValue = newValue.join('')
+      
+      onChange(updatedValue)
+      
+      if (inputValue !== '') {
+        focusNextInput(index)
+      }
+    }
 
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
+    const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Backspace' && !value[index]) {
+        focusPrevInput(index)
+      }
+    }
+
+    const handlePaste = (e: React.ClipboardEvent) => {
+      e.preventDefault()
+      const pastedData = e.clipboardData.getData('text/plain')
+      const pastedValue = pastedData.slice(0, maxLength)
+      
+      if (/^\d+$/.test(pastedValue)) {
+        onChange(pastedValue)
+        inputRefs.current[Math.min(pastedValue.length, maxLength - 1)]?.focus()
+      }
+    }
+
+    return (
+      <div 
+        ref={ref}
+        className={cn(
+          "flex gap-2 items-center justify-center",
+          className
+        )}
+      >
+        {Array.from({ length: maxLength }).map((_, index) => (
+          <input
+            key={index}
+            ref={el => inputRefs.current[index] = el}
+            type="text"
+            inputMode="numeric"
+            pattern="\d*"
+            maxLength={1}
+            value={value[index] || ''}
+            onChange={e => handleInputChange(index, e.target.value)}
+            onKeyDown={e => handleKeyDown(index, e)}
+            onPaste={handlePaste}
+            className={cn(
+              "w-12 h-14 text-center text-2xl font-bold rounded-md",
+              "bg-card border-2 border-muted",
+              "focus:border-primary focus:ring-1 focus:ring-primary",
+              "text-foreground placeholder:text-muted-foreground",
+              "transition-all duration-200"
+            )}
+            {...props}
+          />
+        ))}
+      </div>
+    )
+  }
+)
+
+InputOTP.displayName = "InputOTP"
+
+export { InputOTP }
