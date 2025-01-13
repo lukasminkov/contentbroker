@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, DollarSign } from "lucide-react";
 
 const NICHES = [
   "Nutrition",
@@ -50,6 +50,27 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
       i === index ? { ...account, [field]: value } : account
     );
     updateFormData({ tiktokAccounts: newAccounts });
+  };
+
+  const handleGMVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove any non-numeric characters except decimal point
+    const value = e.target.value.replace(/[^0-9.]/g, '');
+    
+    // Ensure only one decimal point
+    const parts = value.split('.');
+    const formattedValue = parts.length > 2 ? `${parts[0]}.${parts[1]}` : value;
+    
+    // Format with commas for thousands
+    const number = parseFloat(formattedValue);
+    if (!isNaN(number)) {
+      const formatted = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(number);
+      updateFormData({ gmv: formatted });
+    } else if (formattedValue === '') {
+      updateFormData({ gmv: '' });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -131,13 +152,16 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         <div className="text-sm text-muted-foreground mb-2">
           Enter your total GMV across all TikTok Shop accounts
         </div>
-        <Input
-          value={formData.gmv}
-          onChange={(e) => updateFormData({ gmv: e.target.value })}
-          className="form-input"
-          placeholder="Enter your total TikTok Shop GMV"
-          required
-        />
+        <div className="relative">
+          <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={formData.gmv}
+            onChange={handleGMVChange}
+            className="form-input pl-9"
+            placeholder="0.00"
+            required
+          />
+        </div>
       </div>
 
       <div>
