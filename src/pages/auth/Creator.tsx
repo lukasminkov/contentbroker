@@ -18,15 +18,36 @@ export default function Creator() {
 
   // Check and clear any invalid sessions on component mount
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      
-      if (sessionError || (session && !session.refresh_token)) {
+    const checkAndClearSession = async () => {
+      try {
+        console.log("Checking session status...")
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        
+        if (sessionError) {
+          console.error("Session error:", sessionError)
+          await supabase.auth.signOut()
+          return
+        }
+
+        if (session) {
+          // If session exists but is invalid (no refresh token)
+          if (!session.refresh_token) {
+            console.log("Invalid session detected, clearing...")
+            await supabase.auth.signOut()
+          } else {
+            console.log("Valid session found")
+          }
+        } else {
+          console.log("No active session")
+        }
+      } catch (err) {
+        console.error("Error checking session:", err)
+        // Attempt to clear the session in case of any errors
         await supabase.auth.signOut()
       }
     }
     
-    checkSession()
+    checkAndClearSession()
   }, [])
 
   const handleSendOTP = async (e: React.FormEvent) => {
@@ -35,9 +56,11 @@ export default function Creator() {
     setLoading(true)
 
     try {
+      console.log("Attempting to clear existing session...")
       // Clear any existing sessions first
       await supabase.auth.signOut()
       
+      console.log("Sending OTP to:", email)
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
@@ -49,6 +72,7 @@ export default function Creator() {
       })
 
       if (error) {
+        console.error("OTP send error:", error)
         if (error.message.includes('rate limit')) {
           throw new Error("Too many email attempts. Please wait a few minutes before trying again.")
         }
@@ -74,6 +98,7 @@ export default function Creator() {
     setLoading(true)
 
     try {
+      console.log("Verifying OTP for:", email)
       const { data, error: verifyError } = await supabase.auth.verifyOtp({
         email,
         token: otp,
@@ -81,6 +106,7 @@ export default function Creator() {
       })
 
       if (verifyError) {
+        console.error("OTP verification error:", verifyError)
         if (verifyError.message.includes('expired')) {
           throw new Error("Verification code has expired. Please request a new one.")
         }
@@ -91,6 +117,7 @@ export default function Creator() {
         throw new Error("Verification failed. Please try again.")
       }
 
+      console.log("Checking profile for user:", data.user.id)
       // After successful verification, check if user has completed onboarding
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
@@ -99,6 +126,7 @@ export default function Creator() {
         .maybeSingle()
 
       if (profileError) {
+        console.error("Profile fetch error:", profileError)
         throw profileError
       }
 
