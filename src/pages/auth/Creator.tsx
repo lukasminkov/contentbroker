@@ -26,7 +26,6 @@ export default function Creator() {
         email,
         options: {
           shouldCreateUser: true,
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             role: 'creator'
           }
@@ -56,7 +55,7 @@ export default function Creator() {
       const { error } = await supabase.auth.verifyOtp({
         email,
         token: otp,
-        type: "email",
+        type: "signup",
       })
 
       if (error) throw error
@@ -120,8 +119,8 @@ export default function Creator() {
                 onChange={setOtp}
                 render={({ slots }) => (
                   <InputOTPGroup>
-                    {slots.map((slot, index) => (
-                      <InputOTPSlot key={index} {...slot} index={index} />
+                    {slots.map((slot, idx) => (
+                      <InputOTPSlot key={idx} {...slot} index={idx} />
                     ))}
                   </InputOTPGroup>
                 )}
