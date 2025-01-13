@@ -129,7 +129,7 @@ export default function Creator() {
                         key={idx} 
                         {...slot} 
                         index={idx}
-                        className="w-10 h-12 text-lg border-2 border-muted"
+                        className="w-10 h-12 text-lg border-2 border-muted text-foreground bg-card"
                       />
                     ))}
                   </InputOTPGroup>
