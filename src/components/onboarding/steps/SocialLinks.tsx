@@ -1,25 +1,9 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Minus, DollarSign } from "lucide-react";
-
-const NICHES = [
-  "Nutrition",
-  "Fitness",
-  "Tech",
-  "Reviews",
-  "Personal Brand",
-  "Beauty",
-  "Fashion",
-  "Gaming",
-  "Education",
-  "Entertainment",
-  "Lifestyle",
-  "Travel",
-  "Business",
-  "General",
-];
+import { Plus } from "lucide-react";
+import TikTokAccountInput from "./TikTokAccountInput";
+import GMVInput from "./GMVInput";
 
 interface SocialLinksProps {
   formData: any;
@@ -53,14 +37,10 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
   };
 
   const handleGMVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Remove any non-numeric characters except decimal point
     const value = e.target.value.replace(/[^0-9.]/g, '');
-    
-    // Ensure only one decimal point
     const parts = value.split('.');
     const formattedValue = parts.length > 2 ? `${parts[0]}.${parts[1]}` : value;
     
-    // Format with commas for thousands
     const number = parseFloat(formattedValue);
     if (!isNaN(number)) {
       const formatted = new Intl.NumberFormat('en-US', {
@@ -87,54 +67,14 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
       <h2 className="text-2xl font-bold text-center mb-6">Social Media Links</h2>
 
       {formData.tiktokAccounts.map((account: any, index: number) => (
-        <div key={index} className="space-y-4 p-4 bg-muted rounded-lg">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">TikTok Account {index + 1}</h3>
-            {index > 0 && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => removeTikTokAccount(index)}
-                className="text-destructive hover:text-destructive/80"
-              >
-                <Minus className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="form-label">Account URL</label>
-              <Input
-                value={account.url}
-                onChange={(e) => updateTikTokAccount(index, "url", e.target.value)}
-                className="form-input"
-                placeholder="https://tiktok.com/@username"
-                required={index === 0}
-              />
-            </div>
-
-            <div>
-              <label className="form-label">Account Niche</label>
-              <Select
-                value={account.niche}
-                onValueChange={(value) => updateTikTokAccount(index, "niche", value)}
-              >
-                <SelectTrigger className="form-input">
-                  <SelectValue placeholder="Select a niche" />
-                </SelectTrigger>
-                <SelectContent>
-                  {NICHES.map((niche) => (
-                    <SelectItem key={niche} value={niche.toLowerCase()}>
-                      {niche}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
+        <TikTokAccountInput
+          key={index}
+          account={account}
+          index={index}
+          isRemovable={index > 0}
+          onUpdate={updateTikTokAccount}
+          onRemove={removeTikTokAccount}
+        />
       ))}
 
       <Button
@@ -147,22 +87,7 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         Add Another TikTok Account
       </Button>
 
-      <div className="mt-6 p-4 bg-muted rounded-lg">
-        <label className="form-label">Total TikTok Shop GMV</label>
-        <div className="text-sm text-muted-foreground mb-2">
-          Enter your total GMV across all TikTok Shop accounts
-        </div>
-        <div className="relative flex items-center">
-          <span className="absolute left-3 text-muted-foreground">$</span>
-          <Input
-            value={formData.gmv}
-            onChange={handleGMVChange}
-            className="form-input pl-7"
-            placeholder="0.00"
-            required
-          />
-        </div>
-      </div>
+      <GMVInput value={formData.gmv} onChange={handleGMVChange} />
 
       <div>
         <label className="form-label">Instagram (Optional)</label>
