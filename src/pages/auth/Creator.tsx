@@ -28,7 +28,8 @@ export default function Creator() {
           shouldCreateUser: true,
           data: {
             role: 'creator'
-          }
+          },
+          channel: 'email',
         },
       })
 
