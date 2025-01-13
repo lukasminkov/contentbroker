@@ -122,13 +122,13 @@ export default function Creator() {
                 value={otp}
                 onChange={setOtp}
                 render={({ slots }) => (
-                  <InputOTPGroup className="gap-2">
+                  <InputOTPGroup className="gap-2 justify-center">
                     {slots.map((slot, idx) => (
                       <InputOTPSlot 
                         key={idx} 
                         {...slot} 
                         index={idx}
-                        className="w-10 h-12 text-lg border-2 border-muted text-white bg-card"
+                        className="w-10 h-12 text-lg font-semibold border-2 border-muted bg-muted text-white focus:border-primary focus:ring-1 focus:ring-primary"
                       />
                     ))}
                   </InputOTPGroup>
