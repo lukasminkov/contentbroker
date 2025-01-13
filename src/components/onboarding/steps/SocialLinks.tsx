@@ -152,14 +152,12 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
         <div className="text-sm text-muted-foreground mb-2">
           Enter your total GMV across all TikTok Shop accounts
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center">
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </div>
+        <div className="relative flex items-center">
+          <span className="absolute left-3 text-muted-foreground">$</span>
           <Input
             value={formData.gmv}
             onChange={handleGMVChange}
-            className="form-input"
+            className="form-input pl-7"
             placeholder="0.00"
             required
           />
