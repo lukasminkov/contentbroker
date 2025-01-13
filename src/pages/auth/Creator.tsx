@@ -64,7 +64,12 @@ export default function Creator() {
         title: "Success!",
         description: "Your account has been verified.",
       })
-      navigate("/onboarding")
+      
+      // Add a small delay to ensure the toast is visible before navigation
+      setTimeout(() => {
+        navigate("/onboarding")
+      }, 500)
+      
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -118,9 +123,14 @@ export default function Creator() {
                 value={otp}
                 onChange={setOtp}
                 render={({ slots }) => (
-                  <InputOTPGroup>
+                  <InputOTPGroup className="gap-2">
                     {slots.map((slot, idx) => (
-                      <InputOTPSlot key={idx} {...slot} index={idx} />
+                      <InputOTPSlot 
+                        key={idx} 
+                        {...slot} 
+                        index={idx}
+                        className="w-10 h-12 text-lg border-2 border-muted"
+                      />
                     ))}
                   </InputOTPGroup>
                 )}
