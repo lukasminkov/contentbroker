@@ -26,9 +26,16 @@ const OnboardingForm = () => {
   // Save form data to Supabase
   const saveFormData = async (data: typeof formData) => {
     try {
-      // Validate required fields before saving
-      if (!data.firstName || !data.lastName || !data.dateOfBirth) {
-        console.log("Skipping save - required fields missing");
+      // Enhanced validation for required fields
+      if (!data.firstName || !data.lastName) {
+        console.log("Skipping save - name fields missing");
+        return;
+      }
+
+      // Validate date format
+      const dateOfBirth = data.dateOfBirth ? new Date(data.dateOfBirth) : null;
+      if (!dateOfBirth || isNaN(dateOfBirth.getTime())) {
+        console.log("Skipping save - invalid date format");
         return;
       }
 
@@ -42,6 +49,8 @@ const OnboardingForm = () => {
         return;
       }
 
+      console.log("Saving profile with date:", data.dateOfBirth);
+
       // Save profile data
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
@@ -49,7 +58,7 @@ const OnboardingForm = () => {
           user_id: session.session.user.id,
           first_name: data.firstName,
           last_name: data.lastName,
-          date_of_birth: data.dateOfBirth,
+          date_of_birth: data.dateOfBirth, // Now validated to be a proper date
           profile_picture_url: data.profilePicture,
           about: data.about,
           instagram_url: data.instagram,
@@ -59,7 +68,10 @@ const OnboardingForm = () => {
         .select()
         .single();
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error("Profile save error:", profileError);
+        throw profileError;
+      }
 
       // Save TikTok accounts only if we have valid profile data and accounts
       if (profileData?.id && data.tiktokAccounts.length > 0 && data.tiktokAccounts[0].url) {
@@ -73,7 +85,10 @@ const OnboardingForm = () => {
             }))
           );
 
-        if (tiktokError) throw tiktokError;
+        if (tiktokError) {
+          console.error("TikTok accounts save error:", tiktokError);
+          throw tiktokError;
+        }
       }
 
       console.log("Form data saved successfully");
