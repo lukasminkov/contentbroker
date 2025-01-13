@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { Label } from "@/components/ui/label"
+import { toast } from "@/components/ui/use-toast"
 
 export default function Creator() {
   const navigate = useNavigate()
@@ -25,12 +26,20 @@ export default function Creator() {
         email,
         options: {
           shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            role: 'creator'
+          }
         },
       })
 
       if (error) throw error
 
       setShowOTP(true)
+      toast({
+        title: "Verification code sent",
+        description: "Please check your email for the verification code.",
+      })
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -52,8 +61,11 @@ export default function Creator() {
 
       if (error) throw error
 
-      // Successfully verified OTP
-      navigate("/dashboard")
+      toast({
+        title: "Success!",
+        description: "Your account has been verified.",
+      })
+      navigate("/onboarding")
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -108,8 +120,8 @@ export default function Creator() {
                 onChange={setOtp}
                 render={({ slots }) => (
                   <InputOTPGroup>
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <InputOTPSlot key={i} index={i} />
+                    {slots.map((slot, index) => (
+                      <InputOTPSlot key={index} {...slot} />
                     ))}
                   </InputOTPGroup>
                 )}
