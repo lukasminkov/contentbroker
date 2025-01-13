@@ -65,7 +65,6 @@ export default function Creator() {
         description: "Your account has been verified.",
       })
       
-      // Add a small delay to ensure the toast is visible before navigation
       setTimeout(() => {
         navigate("/onboarding")
       }, 500)
@@ -129,7 +128,7 @@ export default function Creator() {
                         key={idx} 
                         {...slot} 
                         index={idx}
-                        className="w-10 h-12 text-lg border-2 border-muted text-foreground bg-card"
+                        className="w-10 h-12 text-lg border-2 border-muted text-white bg-card"
                       />
                     ))}
                   </InputOTPGroup>
