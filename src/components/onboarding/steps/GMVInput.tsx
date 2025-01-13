@@ -14,11 +14,13 @@ const GMVInput: React.FC<GMVInputProps> = ({ value, onChange }) => {
         Enter your total GMV across all TikTok Shop accounts
       </div>
       <div className="relative flex items-center">
-        <span className="absolute left-3 text-muted-foreground">$</span>
+        <div className="absolute left-3 text-muted-foreground pointer-events-none">
+          $
+        </div>
         <Input
           value={value}
           onChange={onChange}
-          className="form-input pl-7"
+          className="pl-7"
           placeholder="0.00"
           required
         />
