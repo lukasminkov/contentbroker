@@ -74,21 +74,31 @@ export default function Creator() {
     setLoading(true)
 
     try {
-      const { error: verifyError } = await supabase.auth.verifyOtp({
+      const { data, error: verifyError } = await supabase.auth.verifyOtp({
         email,
         token: otp,
         type: "signup",
       })
 
-      if (verifyError) throw verifyError
+      if (verifyError) {
+        if (verifyError.message.includes('expired')) {
+          throw new Error("Verification code has expired. Please request a new one.")
+        }
+        throw verifyError
+      }
+
+      if (!data.user) {
+        throw new Error("Verification failed. Please try again.")
+      }
 
       // After successful verification, check if user has completed onboarding
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .single()
+        .eq('user_id', data.user.id)
+        .maybeSingle()
 
-      if (profileError && !profileError.message.includes('No rows found')) {
+      if (profileError) {
         throw profileError
       }
 
@@ -108,6 +118,12 @@ export default function Creator() {
     } catch (err: any) {
       setError(err.message)
       console.error("Verify OTP Error:", err)
+      
+      // If OTP expired, allow user to request new code
+      if (err.message.includes('expired')) {
+        setShowOTP(false)
+        setOtp("")
+      }
     } finally {
       setLoading(false)
     }
