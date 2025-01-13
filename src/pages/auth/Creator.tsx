@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { supabase } from "@/integrations/supabase/client"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -16,12 +16,28 @@ export default function Creator() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  // Check and clear any invalid sessions on component mount
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      
+      if (sessionError || (session && !session.refresh_token)) {
+        await supabase.auth.signOut()
+      }
+    }
+    
+    checkSession()
+  }, [])
+
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
     try {
+      // Clear any existing sessions first
+      await supabase.auth.signOut()
+      
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
@@ -46,6 +62,7 @@ export default function Creator() {
       })
     } catch (err: any) {
       setError(err.message)
+      console.error("Send OTP Error:", err)
     } finally {
       setLoading(false)
     }
@@ -66,10 +83,14 @@ export default function Creator() {
       if (verifyError) throw verifyError
 
       // After successful verification, check if user has completed onboarding
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .single()
+
+      if (profileError && !profileError.message.includes('No rows found')) {
+        throw profileError
+      }
 
       toast({
         title: "Success!",
@@ -86,6 +107,7 @@ export default function Creator() {
       
     } catch (err: any) {
       setError(err.message)
+      console.error("Verify OTP Error:", err)
     } finally {
       setLoading(false)
     }
