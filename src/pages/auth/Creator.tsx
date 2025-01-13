@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Label } from "@/components/ui/label";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { supabase } from "@/integrations/supabase/client"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
+import { Label } from "@/components/ui/label"
 
 export default function Creator() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [showOTP, setShowOTP] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [otp, setOtp] = useState("")
+  const [showOTP, setShowOTP] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const handleSendOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
 
     try {
       const { error } = await supabase.auth.signInWithOtp({
@@ -26,40 +26,40 @@ export default function Creator() {
         options: {
           shouldCreateUser: true,
         },
-      });
+      })
 
-      if (error) throw error;
+      if (error) throw error
 
-      setShowOTP(true);
+      setShowOTP(true)
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
 
     try {
       const { error } = await supabase.auth.verifyOtp({
         email,
         token: otp,
         type: "email",
-      });
+      })
 
-      if (error) throw error;
+      if (error) throw error
 
       // Successfully verified OTP
-      navigate("/dashboard");
+      navigate("/dashboard")
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -108,8 +108,8 @@ export default function Creator() {
                 maxLength={6}
                 render={({ slots }) => (
                   <InputOTPGroup>
-                    {slots.map((slot, index) => (
-                      <InputOTPSlot key={index} index={index} {...slot} />
+                    {slots.map((slot, i) => (
+                      <InputOTPSlot key={i} {...slot} index={i} />
                     ))}
                   </InputOTPGroup>
                 )}
@@ -134,5 +134,5 @@ export default function Creator() {
         )}
       </div>
     </div>
-  );
+  )
 }
