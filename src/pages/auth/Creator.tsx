@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { supabase } from "@/integrations/supabase/client"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
@@ -32,7 +32,12 @@ export default function Creator() {
         },
       })
 
-      if (error) throw error
+      if (error) {
+        if (error.message.includes('rate limit')) {
+          throw new Error("Too many email attempts. Please wait a few minutes before trying again.")
+        }
+        throw error
+      }
 
       setShowOTP(true)
       toast({
@@ -87,7 +92,8 @@ export default function Creator() {
         </div>
 
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="text-left">
+            <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -146,7 +152,11 @@ export default function Creator() {
               type="button"
               variant="link"
               className="w-full"
-              onClick={() => setShowOTP(false)}
+              onClick={() => {
+                setShowOTP(false)
+                setError(null)
+                setOtp("")
+              }}
             >
               Use a different email
             </Button>
