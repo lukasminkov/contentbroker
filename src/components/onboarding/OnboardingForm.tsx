@@ -26,6 +26,12 @@ const OnboardingForm = () => {
   // Save form data to Supabase
   const saveFormData = async (data: typeof formData) => {
     try {
+      // Validate required fields before saving
+      if (!data.firstName || !data.lastName || !data.dateOfBirth) {
+        console.log("Skipping save - required fields missing");
+        return;
+      }
+
       const { data: session } = await supabase.auth.getSession();
       if (!session?.session?.user) {
         toast({
@@ -37,7 +43,7 @@ const OnboardingForm = () => {
       }
 
       // Save profile data
-      const { error: profileError } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .upsert({
           user_id: session.session.user.id,
@@ -55,13 +61,13 @@ const OnboardingForm = () => {
 
       if (profileError) throw profileError;
 
-      // Save TikTok accounts
-      if (data.tiktokAccounts.length > 0) {
+      // Save TikTok accounts only if we have valid profile data and accounts
+      if (profileData?.id && data.tiktokAccounts.length > 0 && data.tiktokAccounts[0].url) {
         const { error: tiktokError } = await supabase
           .from("tiktok_accounts")
           .upsert(
             data.tiktokAccounts.map((account) => ({
-              profile_id: profileError?.data?.id,
+              profile_id: profileData.id,
               url: account.url,
               niche: account.niche,
             }))
