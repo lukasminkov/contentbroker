@@ -103,13 +103,13 @@ export default function Creator() {
             <div className="space-y-2">
               <Label htmlFor="otp">Verification code</Label>
               <InputOTP
+                maxLength={6}
                 value={otp}
                 onChange={setOtp}
-                maxLength={6}
                 render={({ slots }) => (
                   <InputOTPGroup>
-                    {slots.map((slot, i) => (
-                      <InputOTPSlot key={i} {...slot} index={i} />
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <InputOTPSlot key={i} index={i} />
                     ))}
                   </InputOTPGroup>
                 )}
