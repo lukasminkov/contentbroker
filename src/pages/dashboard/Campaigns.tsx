@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
-import { DollarSign, Video, Sparkles, Gift } from "lucide-react"
+import { DollarSign, Video, Sparkles, Gift, Eye } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 const categories = [
@@ -35,6 +35,47 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
   console.log("Campaign data:", campaign)
   const totalCommission = campaign.base_commission + campaign.commission_boost
 
+  const renderCampaignTypeInfo = () => {
+    switch (campaign.campaign_type) {
+      case 'retainer':
+        return (
+          <div className="flex items-center gap-2">
+            <DollarSign className="mr-1 h-3 w-3" />
+            <span>Retainer</span>
+          </div>
+        )
+      case 'incentive':
+        return (
+          <div className="flex items-center gap-2">
+            <Sparkles className="mr-1 h-3 w-3" />
+            <span>Incentive</span>
+          </div>
+        )
+      case 'ppv':
+        return (
+          <div className="flex items-center gap-2">
+            <Eye className="mr-1 h-3 w-3" />
+            <span>PPV</span>
+          </div>
+        )
+      default:
+        return null
+    }
+  }
+
+  const renderCompensationInfo = () => {
+    switch (campaign.campaign_type) {
+      case 'retainer':
+        return `$${campaign.retainer_min} - $${campaign.retainer_max}`
+      case 'incentive':
+        return `${totalCommission}% Commission`
+      case 'ppv':
+        return `$${campaign.ppv_rate} per 1K views`
+      default:
+        return null
+    }
+  }
+
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg h-full">
       <div className="aspect-video w-full overflow-hidden">
@@ -54,19 +95,20 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
             <div className="flex flex-col gap-2 ml-2 shrink-0">
               <Badge 
                 variant={campaign.campaign_type === 'retainer' ? 'default' : 'secondary'}
-                className={campaign.campaign_type === 'incentive' ? 'bg-orange-500 hover:bg-orange-600' : ''}
+                className={
+                  campaign.campaign_type === 'incentive' 
+                    ? 'bg-orange-500 hover:bg-orange-600' 
+                    : campaign.campaign_type === 'ppv'
+                    ? 'bg-purple-500 hover:bg-purple-600'
+                    : ''
+                }
               >
-                {campaign.campaign_type === 'retainer' ? (
-                  <DollarSign className="mr-1 h-3 w-3" />
-                ) : (
-                  <Sparkles className="mr-1 h-3 w-3" />
-                )}
-                {campaign.campaign_type === 'retainer' ? 'Retainer' : 'Incentive'}
+                {renderCampaignTypeInfo()}
               </Badge>
-              {campaign.free_samples && (
+              {(campaign.free_samples || campaign.campaign_type === 'incentive') && (
                 <Badge variant="outline" className="bg-accent/10">
                   <Gift className="mr-1 h-3 w-3" />
-                  Free Sample
+                  Free Sample (${campaign.sample_value})
                 </Badge>
               )}
             </div>
@@ -76,27 +118,9 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
       <CardContent>
         <div className="mb-4 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Commission</span>
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-foreground">{totalCommission}%</span>
-              {campaign.commission_boost > 0 && (
-                <span className="text-sm text-emerald-500">
-                  (+{campaign.commission_boost}%)
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center justify-between min-h-[24px]">
-            <span className="text-sm text-muted-foreground">
-              {campaign.campaign_type === 'retainer' 
-                ? 'Retainer' 
-                : 'Prizes'}
-            </span>
+            <span className="text-sm text-muted-foreground">Compensation</span>
             <span className="font-medium text-emerald-500">
-              {campaign.campaign_type === 'retainer' 
-                ? `$${campaign.retainer_min} - $${campaign.retainer_max}`
-                : campaign.prizes ? 'Yes' : 'No'
-              }
+              {renderCompensationInfo()}
             </span>
           </div>
           <div className="flex items-center justify-between">
@@ -107,12 +131,25 @@ const CampaignCard = ({ campaign }: { campaign: any }) => {
             <h4 className="text-sm font-medium mb-2">Deliverables</h4>
             <div className="space-y-2">
               <div className="bg-muted/20 p-2 rounded-md">
-                <p className="text-sm font-medium">
-                  {campaign.videos_per_day} video{campaign.videos_per_day > 1 ? 's' : ''} per day
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  For {campaign.campaign_duration_days} days (Total: {campaign.videos_per_day * campaign.campaign_duration_days} videos)
-                </p>
+                {campaign.campaign_type === 'incentive' ? (
+                  <div>
+                    <p className="text-sm font-medium">
+                      {campaign.videos_for_sample} videos for free sample
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Sample value: ${campaign.sample_value}
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-sm font-medium">
+                      {campaign.videos_per_day} video{campaign.videos_per_day > 1 ? 's' : ''} per day
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      For {campaign.campaign_duration_days} days (Total: {campaign.videos_per_day * campaign.campaign_duration_days} videos)
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

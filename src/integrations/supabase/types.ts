@@ -28,15 +28,18 @@ export type Database = {
           id: string
           name: string
           platform: string
+          ppv_rate: number | null
           prizes: boolean | null
           product_image_url: string | null
           product_name: string
           profile_id: string | null
           retainer_max: number | null
           retainer_min: number | null
+          sample_value: number | null
           status: string
           tracking_link: string | null
           updated_at: string
+          videos_for_sample: number | null
           videos_per_day: number
         }
         Insert: {
@@ -57,15 +60,18 @@ export type Database = {
           id?: string
           name: string
           platform?: string
+          ppv_rate?: number | null
           prizes?: boolean | null
           product_image_url?: string | null
           product_name?: string
           profile_id?: string | null
           retainer_max?: number | null
           retainer_min?: number | null
+          sample_value?: number | null
           status?: string
           tracking_link?: string | null
           updated_at?: string
+          videos_for_sample?: number | null
           videos_per_day?: number
         }
         Update: {
@@ -86,15 +92,18 @@ export type Database = {
           id?: string
           name?: string
           platform?: string
+          ppv_rate?: number | null
           prizes?: boolean | null
           product_image_url?: string | null
           product_name?: string
           profile_id?: string | null
           retainer_max?: number | null
           retainer_min?: number | null
+          sample_value?: number | null
           status?: string
           tracking_link?: string | null
           updated_at?: string
+          videos_for_sample?: number | null
           videos_per_day?: number
         }
         Relationships: [
@@ -229,7 +238,7 @@ export type Database = {
           niche?: string
           profile_id?: string | null
           updated_at?: string
-          url?: string
+          url: string
         }
         Relationships: [
           {
@@ -277,7 +286,7 @@ export type Tables<
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
@@ -289,10 +298,10 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
+      Row: infer R
+    }
+    ? R
+    : never
     : never
 
 export type TablesInsert<
