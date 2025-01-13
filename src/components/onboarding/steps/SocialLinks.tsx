@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import TikTokAccountInput from "./TikTokAccountInput";
 import GMVInput from "./GMVInput";
+import { useToast } from "@/hooks/use-toast";
 
 interface SocialLinksProps {
   formData: any;
@@ -18,6 +19,8 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
   onNext,
   onPrev,
 }) => {
+  const { toast } = useToast();
+
   const addTikTokAccount = () => {
     updateFormData({
       tiktokAccounts: [...formData.tiktokAccounts, { url: "", niche: "" }],
@@ -53,12 +56,28 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
     }
   };
 
+  const validateTikTokUrl = (url: string): boolean => {
+    return url.toLowerCase().includes('tiktok.com');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate TikTok URL format
+    if (!validateTikTokUrl(formData.tiktokAccounts[0].url)) {
+      toast({
+        title: "Invalid TikTok URL",
+        description: "Please enter a valid TikTok URL (must include tiktok.com)",
+        variant: "destructive",
+      });
+      return;
+    }
+
     onNext();
   };
 
   const isValid = formData.tiktokAccounts[0]?.url && 
+                  validateTikTokUrl(formData.tiktokAccounts[0].url) &&
                   formData.tiktokAccounts[0]?.niche && 
                   formData.gmv;
 
