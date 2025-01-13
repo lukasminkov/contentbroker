@@ -2,11 +2,12 @@ import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupCon
   SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, 
   SidebarTrigger, SidebarHeader, SidebarFooter } from "@/components/ui/sidebar"
 import { Home, List, Settings, CreditCard, User } from "lucide-react"
-import { Outlet, useLocation } from "react-router-dom"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useEffect } from "react"
 
 const menuItems = [
   {
@@ -23,24 +24,43 @@ const menuItems = [
 
 const DashboardLayout = () => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   // Fetch user profile data
-  const { data: profile } = useQuery({
+  const { data: profile, error: profileError } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
+      console.log('Fetching profile data...')
       const { data: { session } } = await supabase.auth.getSession()
-      if (!session) throw new Error('No session')
+      if (!session) {
+        console.log('No session found')
+        throw new Error('No session')
+      }
 
+      console.log('Session found, fetching profile for user:', session.user.id)
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', session.user.id)
-        .single()
+        .maybeSingle()
 
-      if (error) throw error
+      if (error) {
+        console.error('Error fetching profile:', error)
+        throw error
+      }
+
+      console.log('Profile data:', data)
       return data
     }
   })
+
+  // If no profile exists, redirect to onboarding
+  useEffect(() => {
+    if (profileError || (!profile && !location.pathname.includes('/onboarding'))) {
+      console.log('No profile found, redirecting to onboarding')
+      navigate('/onboarding')
+    }
+  }, [profile, profileError, navigate, location])
 
   return (
     <SidebarProvider>
@@ -81,54 +101,58 @@ const DashboardLayout = () => {
           <SidebarFooter className="p-2">
             <div className="space-y-4">
               {/* Creator tier badge */}
-              <div className="px-3">
-                <Badge variant="outline" className="w-full justify-center py-1 font-semibold">
-                  {profile?.tier?.toUpperCase()} CREATOR
-                </Badge>
-              </div>
+              {profile && (
+                <div className="px-3">
+                  <Badge variant="outline" className="w-full justify-center py-1 font-semibold">
+                    {profile.tier?.toUpperCase()} CREATOR
+                  </Badge>
+                </div>
+              )}
               
               {/* Profile section */}
-              <div className="space-y-1">
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Profile">
-                      <a href="/dashboard/profile" className="!h-auto py-2">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={profile?.profile_picture_url} />
-                            <AvatarFallback className="bg-muted">
-                              {profile?.first_name?.[0]}
-                              {profile?.last_name?.[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col items-start">
-                            <span className="text-sm font-medium">
-                              {profile?.first_name} {profile?.last_name}
-                            </span>
-                            <span className="text-xs text-muted-foreground">View profile</span>
+              {profile && (
+                <div className="space-y-1">
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild tooltip="Profile">
+                        <a href="/dashboard/profile" className="!h-auto py-2">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={profile.profile_picture_url} />
+                              <AvatarFallback className="bg-muted">
+                                {profile.first_name?.[0]}
+                                {profile.last_name?.[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col items-start">
+                              <span className="text-sm font-medium">
+                                {profile.first_name} {profile.last_name}
+                              </span>
+                              <span className="text-xs text-muted-foreground">View profile</span>
+                            </div>
                           </div>
-                        </div>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Settings">
-                      <a href="/dashboard/settings">
-                        <Settings className="shrink-0" />
-                        <span>Settings</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Billing">
-                      <a href="/dashboard/billing">
-                        <CreditCard className="shrink-0" />
-                        <span>Billing</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </div>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild tooltip="Settings">
+                        <a href="/dashboard/settings">
+                          <Settings className="shrink-0" />
+                          <span>Settings</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild tooltip="Billing">
+                        <a href="/dashboard/billing">
+                          <CreditCard className="shrink-0" />
+                          <span>Billing</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </div>
+              )}
             </div>
           </SidebarFooter>
         </Sidebar>
