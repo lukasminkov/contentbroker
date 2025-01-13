@@ -128,7 +128,7 @@ export default function Creator() {
                         key={idx} 
                         {...slot} 
                         index={idx}
-                        className="w-10 h-12 text-2xl font-bold bg-card border-2 border-muted text-white focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="w-10 h-12 text-2xl font-bold bg-card border-2 border-muted text-foreground focus:border-primary focus:ring-1 focus:ring-primary"
                       />
                     ))}
                   </InputOTPGroup>
