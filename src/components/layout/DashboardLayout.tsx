@@ -1,7 +1,7 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, 
   SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, 
   SidebarTrigger, SidebarHeader, SidebarFooter } from "@/components/ui/sidebar"
-import { Home, List, Settings, CreditCard, User, AlertCircle } from "lucide-react"
+import { Home, List, Settings, CreditCard, User, AlertCircle, DollarSign, MessageSquare, Tool } from "lucide-react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
@@ -21,6 +21,21 @@ const menuItems = [
     title: "Campaigns",
     icon: List,
     path: "/dashboard/campaigns"
+  },
+  {
+    title: "Increased Commissions",
+    icon: DollarSign,
+    path: "/dashboard/commissions"
+  },
+  {
+    title: "Chat",
+    icon: MessageSquare,
+    path: "/dashboard/chat"
+  },
+  {
+    title: "Tools",
+    icon: Tool,
+    path: "/dashboard/tools"
   }
 ]
 
