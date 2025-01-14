@@ -64,6 +64,16 @@ const DashboardLayout = () => {
     }
   }, [profile, profileError, navigate])
 
+  // Debug log for profile completion status
+  useEffect(() => {
+    if (profile) {
+      console.log('Profile completion status:', {
+        profile_completed: profile.profile_completed,
+        typeof: typeof profile.profile_completed
+      })
+    }
+  }, [profile])
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background p-4">
@@ -103,7 +113,7 @@ const DashboardLayout = () => {
           <SidebarFooter className="p-2">
             <div className="space-y-4">
               {/* Profile completion alert - Only show if profile is not completed */}
-              {profile && !profile.profile_completed && (
+              {profile && profile.profile_completed === false && (
                 <div className="px-3">
                   <Alert variant="destructive" className="bg-destructive/20">
                     <AlertCircle className="h-4 w-4" />
