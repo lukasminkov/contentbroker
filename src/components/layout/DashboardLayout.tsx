@@ -103,7 +103,7 @@ const DashboardLayout = () => {
           <SidebarFooter className="p-2">
             <div className="space-y-4">
               {/* Profile completion alert - Only show if profile is not completed */}
-              {profile && profile.profile_completed === false && (
+              {profile && !profile.profile_completed && (
                 <div className="px-3">
                   <Alert variant="destructive" className="bg-destructive/20">
                     <AlertCircle className="h-4 w-4" />
