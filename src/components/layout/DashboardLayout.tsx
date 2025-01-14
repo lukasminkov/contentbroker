@@ -1,12 +1,14 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, 
   SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, 
   SidebarTrigger, SidebarHeader, SidebarFooter } from "@/components/ui/sidebar"
-import { Home, List, Settings, CreditCard, User } from "lucide-react"
+import { Home, List, Settings, CreditCard, User, AlertCircle } from "lucide-react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
 
 const menuItems = [
@@ -54,13 +56,13 @@ const DashboardLayout = () => {
     }
   })
 
-  // If no profile exists, redirect to onboarding
+  // If no profile exists, redirect to auth
   useEffect(() => {
-    if (profileError || (!profile && !location.pathname.includes('/onboarding'))) {
-      console.log('No profile found, redirecting to onboarding')
-      navigate('/onboarding')
+    if (profileError || !profile) {
+      console.log('No profile found, redirecting to auth')
+      navigate('/auth/creator')
     }
-  }, [profile, profileError, navigate, location])
+  }, [profile, profileError, navigate])
 
   return (
     <SidebarProvider>
@@ -100,6 +102,25 @@ const DashboardLayout = () => {
           </SidebarContent>
           <SidebarFooter className="p-2">
             <div className="space-y-4">
+              {/* Profile completion alert */}
+              {profile && !profile.profile_completed && (
+                <div className="px-3">
+                  <Alert variant="warning" className="bg-warning/20">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="text-xs">
+                      Complete your profile to apply for campaigns
+                      <Button
+                        variant="link"
+                        className="h-auto p-0 text-xs"
+                        onClick={() => navigate('/onboarding')}
+                      >
+                        Complete Now
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              )}
+              
               {/* Creator tier badge */}
               {profile && (
                 <div className="px-3">

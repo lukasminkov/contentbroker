@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { InputOTP } from "@/components/ui/input-otp"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function Creator() {
   const navigate = useNavigate()
@@ -15,6 +16,9 @@ export default function Creator() {
   const [showOTP, setShowOTP] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [showNameDialog, setShowNameDialog] = useState(false)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
 
   // Check and clear any invalid sessions on component mount
   useEffect(() => {
@@ -25,27 +29,22 @@ export default function Creator() {
         
         if (sessionError) {
           console.error("Session error:", sessionError)
-          // Clear session on error
           await supabase.auth.signOut()
           return
         }
 
         if (session) {
-          // If session exists but is invalid (no refresh token)
           if (!session.refresh_token) {
             console.log("Invalid session detected (no refresh token), clearing...")
             await supabase.auth.signOut()
           } else {
-            // Try to refresh the session
             const { error: refreshError } = await supabase.auth.refreshSession()
             if (refreshError) {
               console.error("Session refresh failed:", refreshError)
-              // Clear invalid session
               await supabase.auth.signOut()
             } else {
               console.log("Session refreshed successfully")
-              // If we have a valid session, redirect to dashboard
-              navigate("/dashboard")
+              checkProfile(session.user.id)
             }
           }
         } else {
@@ -53,7 +52,6 @@ export default function Creator() {
         }
       } catch (err) {
         console.error("Error checking session:", err)
-        // Attempt to clear the session in case of any errors
         await supabase.auth.signOut()
       }
     }
@@ -61,13 +59,26 @@ export default function Creator() {
     checkAndClearSession()
   }, [navigate])
 
+  const checkProfile = async (userId: string) => {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    if (profile?.first_name && profile?.last_name) {
+      navigate("/dashboard")
+    } else {
+      setShowNameDialog(true)
+    }
+  }
+
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
     try {
-      // Clear any existing sessions first
       console.log("Clearing existing session before OTP request...")
       await supabase.auth.signOut()
       
@@ -128,41 +139,44 @@ export default function Creator() {
         throw new Error("Verification failed. Please try again.")
       }
 
-      console.log("Checking profile for user:", data.user.id)
-      // After successful verification, check if user has completed onboarding
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', data.user.id)
-        .maybeSingle()
-
-      if (profileError) {
-        console.error("Profile fetch error:", profileError)
-        throw profileError
-      }
-
-      toast({
-        title: "Success!",
-        description: "Your account has been verified.",
-      })
-      
-      // If profile exists and has required fields, go to dashboard
-      // Otherwise, go to onboarding
-      if (profile?.first_name && profile?.last_name && profile?.date_of_birth) {
-        navigate("/dashboard")
-      } else {
-        navigate("/onboarding")
-      }
+      setShowNameDialog(true)
       
     } catch (err: any) {
       setError(err.message)
       console.error("Verify OTP Error:", err)
       
-      // If OTP expired, allow user to request new code
       if (err.message.includes('expired')) {
         setShowOTP(false)
         setOtp("")
       }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleNameSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error("No session found")
+
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: session.user.id,
+          first_name: firstName,
+          last_name: lastName,
+          email: session.user.email
+        })
+
+      if (error) throw error
+
+      navigate("/dashboard")
+    } catch (err: any) {
+      setError(err.message)
+      console.error("Name submission error:", err)
     } finally {
       setLoading(false)
     }
@@ -238,6 +252,43 @@ export default function Creator() {
           </form>
         )}
       </div>
+
+      <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Just one more step!</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleNameSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">First Name</Label>
+              <Input
+                id="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Enter your first name"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input
+                id="lastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Enter your last name"
+                required
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading || !firstName || !lastName}
+            >
+              {loading ? "Saving..." : "Continue to Dashboard"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

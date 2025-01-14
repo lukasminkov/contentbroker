@@ -171,7 +171,7 @@ export type Database = {
         Row: {
           about: string | null
           created_at: string
-          date_of_birth: string
+          date_of_birth: string | null
           email: string | null
           email_verified: boolean | null
           first_name: string
@@ -180,6 +180,7 @@ export type Database = {
           id: string
           instagram_url: string | null
           last_name: string
+          profile_completed: boolean | null
           profile_picture_url: string | null
           tier: Database["public"]["Enums"]["creator_tier"]
           updated_at: string
@@ -188,7 +189,7 @@ export type Database = {
         Insert: {
           about?: string | null
           created_at?: string
-          date_of_birth: string
+          date_of_birth?: string | null
           email?: string | null
           email_verified?: boolean | null
           first_name: string
@@ -197,6 +198,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           last_name: string
+          profile_completed?: boolean | null
           profile_picture_url?: string | null
           tier?: Database["public"]["Enums"]["creator_tier"]
           updated_at?: string
@@ -205,7 +207,7 @@ export type Database = {
         Update: {
           about?: string | null
           created_at?: string
-          date_of_birth?: string
+          date_of_birth?: string | null
           email?: string | null
           email_verified?: boolean | null
           first_name?: string
@@ -214,6 +216,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           last_name?: string
+          profile_completed?: boolean | null
           profile_picture_url?: string | null
           tier?: Database["public"]["Enums"]["creator_tier"]
           updated_at?: string
