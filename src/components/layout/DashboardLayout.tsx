@@ -102,10 +102,10 @@ const DashboardLayout = () => {
           </SidebarContent>
           <SidebarFooter className="p-2">
             <div className="space-y-4">
-              {/* Profile completion alert */}
-              {profile && !profile.profile_completed && (
+              {/* Profile completion alert - Only show if profile is not completed */}
+              {profile && profile.profile_completed === false && (
                 <div className="px-3">
-                  <Alert variant="warning" className="bg-warning/20">
+                  <Alert variant="destructive" className="bg-destructive/20">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription className="text-xs">
                       Complete your profile to apply for campaigns
