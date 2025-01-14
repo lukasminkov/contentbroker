@@ -1,7 +1,7 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, 
   SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton, 
   SidebarTrigger, SidebarHeader, SidebarFooter } from "@/components/ui/sidebar"
-import { Home, List, Settings, CreditCard, User, AlertCircle, DollarSign, MessageSquare, Tool } from "lucide-react"
+import { Home, List, Settings, CreditCard, User, AlertCircle, DollarSign, MessageSquare, Wrench } from "lucide-react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/integrations/supabase/client"
@@ -34,7 +34,7 @@ const menuItems = [
   },
   {
     title: "Tools",
-    icon: Tool,
+    icon: Wrench,
     path: "/dashboard/tools"
   }
 ]
