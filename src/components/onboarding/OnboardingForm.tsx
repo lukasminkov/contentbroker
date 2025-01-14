@@ -33,23 +33,28 @@ const OnboardingForm = () => {
           description: "You must be logged in to save your profile",
           variant: "destructive",
         });
-        return;
+        return false;
       }
 
       // Enhanced validation for required fields
       if (!data.firstName || !data.lastName) {
-        console.log("Skipping save - name fields missing");
-        return;
+        console.log("Validation failed - name fields missing");
+        return false;
       }
 
       // Validate date format
       const dateOfBirth = data.dateOfBirth ? new Date(data.dateOfBirth) : null;
       if (!dateOfBirth || isNaN(dateOfBirth.getTime())) {
-        console.log("Skipping save - invalid date format");
-        return;
+        console.log("Validation failed - invalid date format");
+        return false;
       }
 
-      console.log("Saving profile with date:", data.dateOfBirth);
+      console.log("Saving profile with data:", {
+        userId: session.session.user.id,
+        email: session.session.user.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      });
 
       // Save profile data
       const { data: profileData, error: profileError } = await supabase
