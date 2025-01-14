@@ -23,6 +23,55 @@ const OnboardingForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Fetch existing profile data when component mounts
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const { data: session } = await supabase.auth.getSession();
+        if (!session?.session?.user) {
+          toast({
+            title: "Error",
+            description: "You must be logged in to view this page",
+            variant: "destructive",
+          });
+          navigate("/auth/creator");
+          return;
+        }
+
+        console.log("Fetching profile data for user:", session.session.user.id);
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", session.session.user.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching profile:", error);
+          return;
+        }
+
+        if (profile) {
+          console.log("Found existing profile data:", profile);
+          setFormData(prev => ({
+            ...prev,
+            firstName: profile.first_name || "",
+            lastName: profile.last_name || "",
+            dateOfBirth: profile.date_of_birth || "",
+            instagram: profile.instagram_url || "",
+            profilePicture: profile.profile_picture_url,
+            about: profile.about || "",
+            gmv: profile.gmv?.toString() || "",
+            gmvProof: profile.gmv_proof_url,
+          }));
+        }
+      } catch (error) {
+        console.error("Error in fetchProfileData:", error);
+      }
+    };
+
+    fetchProfileData();
+  }, [navigate, toast]);
+
   // Save form data to Supabase
   const saveFormData = async (data: typeof formData) => {
     try {
