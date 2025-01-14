@@ -20,58 +20,45 @@ export default function Creator() {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
 
-  // Check and clear any invalid sessions on component mount
   useEffect(() => {
-    const checkAndClearSession = async () => {
+    const checkSession = async () => {
       try {
         console.log("Checking session status...")
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        const { data: { session } } = await supabase.auth.getSession()
         
-        if (sessionError) {
-          console.error("Session error:", sessionError)
+        if (!session) {
+          console.log("No active session")
+          return
+        }
+
+        // If we have a session, check if it's valid by attempting to get the user's profile
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .maybeSingle()
+
+        if (profileError) {
+          console.error("Profile fetch error:", profileError)
           await supabase.auth.signOut()
           return
         }
 
-        if (session) {
-          if (!session.refresh_token) {
-            console.log("Invalid session detected (no refresh token), clearing...")
-            await supabase.auth.signOut()
-          } else {
-            const { error: refreshError } = await supabase.auth.refreshSession()
-            if (refreshError) {
-              console.error("Session refresh failed:", refreshError)
-              await supabase.auth.signOut()
-            } else {
-              console.log("Session refreshed successfully")
-              checkProfile(session.user.id)
-            }
-          }
+        if (profile?.first_name && profile?.last_name) {
+          navigate("/dashboard")
         } else {
-          console.log("No active session")
+          setShowNameDialog(true)
         }
+
       } catch (err) {
-        console.error("Error checking session:", err)
+        console.error("Session check error:", err)
+        // Clear any invalid session state
         await supabase.auth.signOut()
       }
     }
     
-    checkAndClearSession()
+    checkSession()
   }, [navigate])
-
-  const checkProfile = async (userId: string) => {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle()
-
-    if (profile?.first_name && profile?.last_name) {
-      navigate("/dashboard")
-    } else {
-      setShowNameDialog(true)
-    }
-  }
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -79,7 +66,7 @@ export default function Creator() {
     setLoading(true)
 
     try {
-      console.log("Clearing existing session before OTP request...")
+      // Clear any existing session before starting new auth flow
       await supabase.auth.signOut()
       
       console.log("Sending OTP to:", email)
