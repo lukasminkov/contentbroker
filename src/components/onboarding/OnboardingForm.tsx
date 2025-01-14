@@ -26,6 +26,16 @@ const OnboardingForm = () => {
   // Save form data to Supabase
   const saveFormData = async (data: typeof formData) => {
     try {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session?.session?.user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to save your profile",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Enhanced validation for required fields
       if (!data.firstName || !data.lastName) {
         console.log("Skipping save - name fields missing");
@@ -39,16 +49,6 @@ const OnboardingForm = () => {
         return;
       }
 
-      const { data: session } = await supabase.auth.getSession();
-      if (!session?.session?.user) {
-        toast({
-          title: "Error",
-          description: "You must be logged in to save your profile",
-          variant: "destructive",
-        });
-        return;
-      }
-
       console.log("Saving profile with date:", data.dateOfBirth);
 
       // Save profile data
@@ -58,12 +58,13 @@ const OnboardingForm = () => {
           user_id: session.session.user.id,
           first_name: data.firstName,
           last_name: data.lastName,
-          date_of_birth: data.dateOfBirth, // Now validated to be a proper date
+          date_of_birth: data.dateOfBirth,
           profile_picture_url: data.profilePicture,
           about: data.about,
           instagram_url: data.instagram,
           gmv: data.gmv ? parseFloat(data.gmv.replace(/,/g, "")) : null,
           gmv_proof_url: data.gmvProof,
+          email: session.session.user.email,
         })
         .select()
         .single();
@@ -92,6 +93,7 @@ const OnboardingForm = () => {
       }
 
       console.log("Form data saved successfully");
+      return true;
     } catch (error) {
       console.error("Error saving form data:", error);
       toast({
@@ -99,6 +101,7 @@ const OnboardingForm = () => {
         description: "Failed to save your profile. Please try again.",
         variant: "destructive",
       });
+      return false;
     }
   };
 
@@ -121,8 +124,14 @@ const OnboardingForm = () => {
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const handleSubmit = async () => {
-    await saveFormData(formData);
-    navigate("/dashboard");
+    const success = await saveFormData(formData);
+    if (success) {
+      toast({
+        title: "Success",
+        description: "Your profile has been saved successfully!",
+      });
+      navigate("/dashboard");
+    }
   };
 
   const progress = (step / 3) * 100;
