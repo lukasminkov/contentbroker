@@ -25,6 +25,7 @@ export default function Creator() {
         
         if (sessionError) {
           console.error("Session error:", sessionError)
+          // Clear session on error
           await supabase.auth.signOut()
           return
         }
@@ -32,10 +33,20 @@ export default function Creator() {
         if (session) {
           // If session exists but is invalid (no refresh token)
           if (!session.refresh_token) {
-            console.log("Invalid session detected, clearing...")
+            console.log("Invalid session detected (no refresh token), clearing...")
             await supabase.auth.signOut()
           } else {
-            console.log("Valid session found")
+            // Try to refresh the session
+            const { error: refreshError } = await supabase.auth.refreshSession()
+            if (refreshError) {
+              console.error("Session refresh failed:", refreshError)
+              // Clear invalid session
+              await supabase.auth.signOut()
+            } else {
+              console.log("Session refreshed successfully")
+              // If we have a valid session, redirect to dashboard
+              navigate("/dashboard")
+            }
           }
         } else {
           console.log("No active session")
@@ -48,7 +59,7 @@ export default function Creator() {
     }
     
     checkAndClearSession()
-  }, [])
+  }, [navigate])
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,8 +67,8 @@ export default function Creator() {
     setLoading(true)
 
     try {
-      console.log("Attempting to clear existing session...")
       // Clear any existing sessions first
+      console.log("Clearing existing session before OTP request...")
       await supabase.auth.signOut()
       
       console.log("Sending OTP to:", email)
