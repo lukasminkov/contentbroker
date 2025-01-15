@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 const menuItems = [
   {
@@ -127,6 +128,9 @@ const DashboardLayout = () => {
           </SidebarContent>
           <SidebarFooter className="p-2">
             <div className="space-y-4">
+              <div className="px-3">
+                <ThemeToggle />
+              </div>
               {/* Profile completion alert - Only show if profile is not completed */}
               {profile && profile.profile_completed === false && (
                 <div className="px-3">

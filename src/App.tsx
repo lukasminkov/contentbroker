@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ThemeProvider } from "next-themes"
 import DashboardLayout from "@/components/layout/DashboardLayout"
 import Campaigns from "@/pages/dashboard/Campaigns"
 import CampaignDetails from "@/pages/dashboard/CampaignDetails"
@@ -21,21 +22,23 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/auth/creator" element={<Creator />} />
-          <Route path="/onboarding" element={<OnboardingForm />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Home />} />
-            <Route path="campaigns" element={<Campaigns />} />
-            <Route path="campaigns/:id" element={<CampaignDetails />} />
-            <Route path="campaigns/:id/apply" element={<CampaignApplication />} />
-          </Route>
-        </Routes>
-      </Router>
-    </QueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/auth/creator" element={<Creator />} />
+            <Route path="/onboarding" element={<OnboardingForm />} />
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<Home />} />
+              <Route path="campaigns" element={<Campaigns />} />
+              <Route path="campaigns/:id" element={<CampaignDetails />} />
+              <Route path="campaigns/:id/apply" element={<CampaignApplication />} />
+            </Route>
+          </Routes>
+        </Router>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 

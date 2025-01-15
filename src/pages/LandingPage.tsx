@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, DollarSign, Users, Star, TrendingUp } from "lucide-react"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 const LandingPage = () => {
   return (
@@ -11,7 +12,8 @@ const LandingPage = () => {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
             contentbroker.io
           </h1>
-          <div className="space-x-4">
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <Link to="/auth/creator">
               <Button variant="ghost">Creator Login</Button>
             </Link>
