@@ -22,20 +22,22 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
       <QueryClientProvider client={queryClient}>
         <Router>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/auth/creator" element={<Creator />} />
-            <Route path="/onboarding" element={<OnboardingForm />} />
-            <Route path="/dashboard" element={<DashboardLayout />}>
-              <Route index element={<Home />} />
-              <Route path="campaigns" element={<Campaigns />} />
-              <Route path="campaigns/:id" element={<CampaignDetails />} />
-              <Route path="campaigns/:id/apply" element={<CampaignApplication />} />
-            </Route>
-          </Routes>
+          <div className="min-h-screen bg-background text-foreground">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/auth/creator" element={<Creator />} />
+              <Route path="/onboarding" element={<OnboardingForm />} />
+              <Route path="/dashboard" element={<DashboardLayout />}>
+                <Route index element={<Home />} />
+                <Route path="campaigns" element={<Campaigns />} />
+                <Route path="campaigns/:id" element={<CampaignDetails />} />
+                <Route path="campaigns/:id/apply" element={<CampaignApplication />} />
+              </Route>
+            </Routes>
+          </div>
         </Router>
       </QueryClientProvider>
     </ThemeProvider>
