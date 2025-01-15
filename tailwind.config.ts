@@ -22,8 +22,14 @@ export default {
         border: "transparent",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#1a1a1a",
-        foreground: "hsl(var(--foreground))",
+        background: {
+          DEFAULT: "hsl(var(--background))",
+          dark: "#1a1a1a",
+        },
+        foreground: {
+          DEFAULT: "hsl(var(--foreground))",
+          dark: "#ffffff",
+        },
         primary: {
           DEFAULT: "#8B5CF6",
           hover: "#7C3AED",
@@ -47,12 +53,20 @@ export default {
           foreground: "#1A1F2C",
         },
         card: {
-          DEFAULT: "#222222",
-          foreground: "#FFFFFF",
+          DEFAULT: "hsl(var(--card))",
+          dark: "#222222",
+          foreground: {
+            DEFAULT: "hsl(var(--card-foreground))",
+            dark: "#FFFFFF",
+          },
         },
         popover: {
-          DEFAULT: "#222222",
-          foreground: "#FFFFFF",
+          DEFAULT: "hsl(var(--popover))",
+          dark: "#222222",
+          foreground: {
+            DEFAULT: "hsl(var(--popover-foreground))",
+            dark: "#FFFFFF",
+          },
         },
       },
       borderRadius: {
